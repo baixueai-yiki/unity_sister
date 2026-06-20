@@ -67,6 +67,6 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "sister.slnx",
+    "dotnet.defaultSolution": "unity_sister.slnx",
     "dotnet.enableWorkspaceBasedDevelopment": false
 }
