@@ -1,0 +1,38 @@
+# .gitignore文件里面每一行都是一个忽略规则
+# 后面带/的表示上传时忽略这一整个文件夹
+# .xxx 这种格式类的表示上传时忽略这种格式
+# 只有Assets/ ProjectSettings/ Packages/ 这三个文件夹里的内容是项目本体
+# 其他全是缓存或可以重新生成的临时文件
+# 如果什么时候项目坏了，可以尝试删除Library/ Temp/ Obj/ 文件夹来重新启动
+
+# Unity的临时数据
+Library/
+Temp/
+Obj/
+Build/
+Builds/
+Logs/
+UserSettings/
+
+# vscord自动生成的工程文件
+.vs/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+
+# 系统的垃圾文件
+.DS_Store
+Thumbs.db
+
+# Unity的特殊缓存
+MemoryCaptures/
+
+# Unity Addressables 打包后生成的资源
+ServerData/
