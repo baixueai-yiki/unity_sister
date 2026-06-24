@@ -16,7 +16,7 @@ public class PlayerRest : MonoBehaviour
         controller = GetComponent<PlayerController>();  // 获取自身对象的 PlayerController 组件并赋值给 controller
         stats = GetComponent<PlayerStats>();            // 获取自身对象的 PlayerStats 组件并赋值给 stats
         //rest = GetComponent<PlayerRest>();              // 获取自身对象的 PlayerRest 组件并赋值给 rest
-        //PCS = GetComponent<PlayerInputState>();         // 获取自身对象的 PlayerInputState 组件并赋值给 PCS
+        //PSM = GetComponent<PlayerInputState>();         // 获取自身对象的 PlayerInputState 组件并赋值给 PSM
         //rb2d = GetComponent<Rigidbody2D>();             // 获取自身对象的 Rigidbody2D 组件并赋值给 rb2d
  
     }

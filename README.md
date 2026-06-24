@@ -1,19 +1,31 @@
-# unity_sister
-身为姐姐的玩家被自己的病娇妹妹囚禁在了家里，妹妹会保护姐姐并提供食物。可是妹妹显然不知道怎样维持身体健康，你能在被囚禁在家里的情况下照顾好自己并偷偷与外界取得联系吗？
-
-
+# 开发方向
 ## 项目目标
-# 1.基本思路
-制作一个完整的小游戏，游戏内容简单一些就好
-关键是包含完整的游戏流程：外部菜单、关卡过程、游戏结算
-现在的思路是制作一个极简的室内戏生存小游戏
-玩家被自己的病娇恋人囚禁，基本玩法是在家里生存以保证身体健康
-游戏目标是在不被恋人发现的情况下报警
+开发一个简单的小游戏，目的是找工作时用于展示自身技能
+需要具备完整的流程，如：外部菜单、关卡过程、游戏结算
+也可包含复杂的系统，如：技能编辑器、背包系统、任务链
 
 再之后，据说需要做一些商业项目，来展示技能深度
 我不太清楚这包括什么
+## 设计思路
+目前的想法定位为室内生存游戏，世界观定位于黑死病肆虐时期的欧洲中世纪
+玩家作为失忆且身患黑死病的姐姐被自己的病娇妹妹囚禁在家里，但妹妹其实不一定能照顾好姐姐
+ 所以玩家需要自己利用现有的资源维持自己的身体健康
+ 并在试图逃离妹妹身边时发现妹妹其实是在保护自己的真相
+ 在日常生活中收集信息恢复记忆
+ 最后穿越到新的游戏周目，在前期就刷满妹妹的幸福度尝试攻略妹妹（救下妹妹）
+灵感来源：
+1.以前和群友讨论囚禁爱人的病娇，我想到病娇可能并不擅长照顾人。所以可以会出现把爱人养的营养不均衡且生活方式不健康的情况
+2.以前玩过一个微型解密游戏，玩家的体力被卡的很死，所以必须通过多周目收集信息的方式救下自己的妹妹。反复轮回只为了救下妹妹的感觉
+## 机制设计
+时间系统：游戏会记录游戏已进行的天数以及当天的时间，并根据天数决定一些场景的变化，根据时间决定一天的结束
+健康系统：玩家需要良好的生活方式如 营养均衡、合理休息、维持体温 等保证自己的身体健康
+资源获取与消耗：妹妹每天晚上都会往家里带一些东西，玩家需要合理规划这些资源以维持自己身体健康
+## 数据设计
 
-# 2.游戏内容
+
+
+# 开发指导
+## 素材准备
 1.设计玩家单位
 先放一个长方形充当美术素材
 创建脚本写控制代码，a向左移动 d向右移动 w与物体交互 s躺地上休息
@@ -29,10 +41,124 @@
 女主每天晚上回家时间半固定，拜托她买东西和加班都会晚回家
 先设计成固定对话，之后再补充逻辑
 
+## 场景结构
+MainMenu.unity/
+
+SampleScene.unity/
+├── Main Camera          # 正交摄像机
+├── Global Light 2D      # 
+├── Canvas/          # 画布
+│   ├── GamePlayUI
+│   │   ├── StoryManager.cs            # 故事控制器
+│   │   ├── PlayerStatusUI.cs          # 玩家属性UI
+│   │   ├── DialogueUI.cs              # 对话框UI
+│   │   └── TimeUI.cs                  # 时间ui
+│   ├── Text_Time           # 时间文本
+│   ├── Bar_Stamina         # 
+│   │   ├── Background      # 
+│   │   └── Fill Area       # 
+│   │       └── Fill        # 
+│   └── Panel_Dialogue
+│       ├── Text_Dialogue   # 对话文本
+│       └── Img_Dialogue    # 对话框
+├── Player           # 玩家对象
+│   │   ├── PlayerStateMachine.cs      # 玩家状态机
+│   │   ├── PlayerController.cs        # 玩家控制：WASD移动、速度、方向
+│   │   ├── PlayerAnimation.cs         # 玩家动画：走路、躺下、交互动作
+│   │   ├── PlayerStats.cs             # 玩家属性（体力、体温、饥饿等数据）
+│   │   ├── PlayerRest.cs              # 躺下/休息逻辑（体力/体温恢复）
+│   │   └── PlayerInteraction.cs       # 交互逻辑：床、冰箱、灶台等触发事件
+│   └── Sprite
+│       └──(组件)Animator   # 动画控制器
+├── EventSystem      # 事件系统（unity自带）
+├── TimeSystem       # 时间系统
+│   └── TimeSystem.cs
+├── EventBus         # 时间总线
+│   └── EventBus.cs
+├── StoryManager     # 故事控制器
+│   └── StoryManager.cs
+├── GameStateMachine # 全局状态机
+│   └── GameStateMachine.cs
+├── Grid             # 
+│   └── Tilemap             # 瓦片地图
+
+## 目录结构
+Assets/
+├── Core/                  # 全局系统
+│   ├── Systems/           # 系统
+│   │   ├── TimeSystem.cs                  # 时间系统
+│   │   └── GameStateMachine.cs            # 全局游戏状态机
+│   ├── Managers/          # 控制器
+│   │   ├── EventBus.cs                    # 事件总线
+│   │   └── StoryManager.cs                # 剧情控制器（放在core好像不太合适）
+│   └── SaveSystem/        # 存档系统
+├── Game/                  # 核心游戏模块
+│   ├── Components/        # 通用组件
+│   │   ├── Movement/      # 移动组件
+│   │   │   └── PositionClamp.cs           # 位置钳（用于限制移动的最大位置）
+│   │   └── Prefabs/       # 交互对象预制体
+│   │
+│   ├── Interaction/       # 可交互对象系统（床、冰箱、灶台）
+│   │   ├── Scripts/       # 交互逻辑、物品状态
+│   │   │   └── InteractableBase.cs        # 交互物体基类（床/门/道具）
+│   │   └── Prefabs/       # 交互对象预制体
+│   │
+│   ├── Player/            # 玩家系统
+│   │   ├── Scripts/       # 玩家控制、移动、交互逻辑
+│   │   │   ├── PlayerStateMachine.cs      # 玩家状态机
+│   │   │   ├── PlayerController.cs        # 玩家控制：WASD移动、速度、方向
+│   │   │   ├── PlayerAnimation.cs         # 玩家动画：走路、躺下、交互动作
+│   │   │   ├── PlayerStats.cs             # 玩家属性（体力、体温、饥饿等数据）
+│   │   │   ├── PlayerRest.cs              # 躺下/休息逻辑（体力/体温恢复）
+│   │   │   └── PlayerInteraction.cs       # 交互逻辑：床、冰箱、灶台等触发事件
+│   │   ├── Animations/    # 玩家动画（走路、躺下等）
+│   │   │   ├── Player_Idle
+│   │   │   └── Player_Walk
+│   │   └── Prefabs/       # 玩家预制体
+│   │
+│   └── UI/
+│       ├── MenuScripts/       # 菜单UI控制脚本（面板切换、提示）
+│       │   ├── MainMenuUI.cs              # 主菜单脚本
+│       │   ├── StartUI.cs                 # 启动游戏脚本
+│       │   ├── LoadUI.cs                  # 读取游戏脚本
+│       │   ├── CreditsUI.cs               # 致谢名单脚本
+│       │   └── SettingUI.cs               # 设置界面脚本
+│       ├── GameScripts/       # 游戏UI控制脚本
+│       │   ├── PlayerStatusUI.cs          # 玩家属性UI
+│       │   ├── DialogueUI.cs              # 对话框UI
+│       │   └── TimeUI.cs                  # 时间ui
+│       ├── Fonts/             # 字体
+│       ├── Sprites/           # 按钮/图标/背景等图片
+│       └── Panels/            # UI面板的Prefab预制体
+│
+├── Art/                   # 美术资源
+│   ├── Models/                            # 3D/2D模型
+│   ├── Textures/                          # 贴图
+│   ├── Tiles/                              # 瓦片
+│   └── Materials/                         # 材质球
+├── Audio/                 # 音频资源
+│   ├── BGM/                               # 背景音乐
+│   └── SFX/                               # 音效（交互、脚步、警报）
+│
+├── Data/                  # 配置和静态数据
+│   ├── ScriptableObjects/ # 可配置的数据（如物品属性）
+│   ├── Stories/           # 剧情文本
+│   │   └── DailyStory.cs                  # 日常剧情
+│   └── JSON/              # 剧情文本或简单配置表（但现在不用json系统，以后再考虑）
+├── Scenes/                # 场景文件夹
+│   ├── MainMenu/          # 主菜单场景
+│   │   └── MainMenu.unity                 # 主菜单场景
+│   ├── GamePlay/          # 游戏场景（房间）
+│   │   └── SampleScene.unity              # 游戏场景
+│   └── Test/              # 调试场景
+└── Settings/              # Unity项目设置（图形、输入、标签等）
+
+## 命名规范
+UI对象统一使用下划线命名法
+目录、脚本与类名统一使用驼峰命名法
 
 
-
-# 开发过程
+## 开发过程
 1.创建新场景MainMenu.unity，放在Scenes/MainMenu/
     1.1.创建UI类的对象Canvas画布
     1.2.创建空对象，命名为MainMenuUI。作为Canvas画布的子对象
@@ -105,69 +231,3 @@
     4.5.创建脚本PlayerControlState.cs，放在Game/Player/Scripts/并挂载。作为Player本身的状态机
         4.5.1.现在还没做，感觉得先做动画演出
 
-
-# 目录结构
-Assets/
-├── Core/                  # 全局系统
-│   ├── Systems/           # 系统
-│   │   ├── TimeSystem.cs                  # 时间系统
-│   │   └── GameStateMachine.cs            # 全局游戏状态机
-│   ├── Managers/          # 控制器
-│   │   ├── EventBus.cs                    # 事件总线
-│   │   └── StoryManager.cs                # 剧情控制器（放在core好像不太合适）
-│   └── SaveSystem/        # 存档系统
-├── Game/                  # 核心游戏模块
-│   ├── Interaction/       # 可交互对象系统（床、冰箱、灶台）
-│   │   ├── Scripts/       # 交互逻辑、物品状态
-│   │   │   └── InteractableBase.cs        # 交互物体基类（床/门/道具）
-│   │   └── Prefabs/       # 交互对象预制体
-│   │
-│   ├── Player/            # 玩家系统
-│   │   ├── Scripts/       # 玩家控制、移动、交互逻辑
-│   │   │   ├── PlayerController.cs        # 核心移动逻辑：WASD移动、速度、方向
-│   │   │   ├── PlayerStats.cs             # 玩家属性（体力、体温、饥饿等数据）
-│   │   │   ├── PlayerRest.cs              # 躺下/休息逻辑（体力/体温恢复）
-│   │   │   ├── PlayerControlState.cs      # 玩家控制状态机
-│   │   │   ├── PlayerInteraction.cs       # 交互逻辑：床、冰箱、灶台等触发事件
-│   │   │   └── PlayerAnimation.cs         # 动画控制：走路、躺下、交互动作
-│   │   ├── Prefabs/       # 玩家预制体
-│   │   └── Animations/    # 玩家动画（走路、躺下等）
-│   │
-│   └── UI/
-│       ├── MenuScripts/       # 菜单UI控制脚本（面板切换、提示）
-│       │   ├── MainMenuUI.cs              # 主菜单脚本
-│       │   ├── StartUI.cs                 # 启动游戏脚本
-│       │   ├── LoadUI.cs                  # 读取游戏脚本
-│       │   ├── CreditsUI.cs               # 致谢名单脚本
-│       │   └── SettingUI.cs               # 设置界面脚本
-│       ├── GameScripts/       # 游戏UI控制脚本
-│       │   ├── PlayerStatusUI.cs          # 玩家属性UI
-│       │   └── TimeUI.cs                  # 时间ui
-│       ├── Panels/            # UI面板的Prefab预制体
-│       ├── Sprites/           # 按钮/图标/背景等图片
-│       └── Fonts/             # 字体
-│
-├── Art/                   # 美术资源
-│   ├── Models/                            # 3D/2D模型
-│   ├── Textures/                          # 贴图
-│   └── Materials/                         # 材质球
-├── Audio/                 # 音频资源
-│   ├── BGM/                               # 背景音乐
-│   └── SFX/                               # 音效（交互、脚步、警报）
-│
-├── Data/                  # 配置和静态数据
-│   ├── ScriptableObjects/ # 可配置的数据（如物品属性）
-│   ├── Stories/           # 剧情文本
-│   │   └── DailyStory.cs                  # 日常剧情
-│   └── JSON/              # 剧情文本或简单配置表（但现在不用json系统，以后再考虑）
-├── Scenes/                # 场景文件夹
-│   ├── MainMenu/          # 主菜单场景
-│   │   └── MainMenu.unity                 # 主菜单场景
-│   ├── GamePlay/          # 游戏场景（房间）
-│   │   └── SampleScene.unity              # 游戏场景
-│   └── Test/              # 调试场景
-└── Settings/              # Unity项目设置（图形、输入、标签等）
-
-# 命名规范
-UI对象统一使用下划线命名法
-目录、脚本与类名统一使用驼峰命名法
