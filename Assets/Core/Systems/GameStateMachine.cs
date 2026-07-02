@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class GameStateMachine : MonoBehaviour
 {
-    public EventBus eventBus;            //引用：EventBus事件总线，用来监听事件
-    public PlayerController controller;  //引用：PlayerController玩家控制脚本
+    //public EventBus eventBus;                   //引用：EventBus事件总线，用来监听事件
+    public PlayerController playerController;   //引用：PlayerController玩家控制脚本
     
 
 
@@ -21,29 +21,36 @@ public class GameStateMachine : MonoBehaviour
     //场景加载时调用一次的函数
     void Awake()
     {
-        eventBus = GameObject.Find("EventBus").GetComponent<EventBus>();  // 获取外部对象的EventBus组件并赋值给 eventBus
-        controller = GameObject.Find("Player").GetComponent<PlayerController>();  // 获取外部对象的PlayerController组件并赋值给 controller
+        //eventBus = GameObject.Find("EventBus").GetComponent<EventBus>();                // 获取外部对象的EventBus组件并赋值给 eventBus
+        //playerController = GameObject.Find("Player").GetComponent<PlayerController>();  // 获取外部对象的PlayerController组件并赋值给 controller
         
-
-
-        if (eventBus != null)//监听事件总线，若找不到事件总线则直接返回
-        {
-            //监听OnDayEnd今天结束事件 += Dialogue对话开始
-            eventBus.OnDayEnd += OnEnterDialogue;
-
-            //监听OnDialogueEnd对话结束事件 += Dialogue对话结束
-            eventBus.OnDialogueEnd += OnExitDialogue;
-
-            //OnRequestPause += HandlePauseRequest; //现在还没有暂停这种事件
-        }
     }
 
     
     void Start()//初始化时，将游戏默认设置为Play状态
     {
         SetGameState(GameState.Play);
+
+        //监听OnDayEnd今天结束事件 += Dialogue对话开始
+        //EventBus.OnDayEnd += OnEnterDialogue;
+
+        //监听OnDialogueEnd对话结束事件 += Dialogue对话结束
+        //EventBus.OnDialogueEnd += OnExitDialogue;
+
+        //OnRequestPause += HandlePauseRequest; //现在还没有暂停这种事件
     }
 
+
+    void OnEnable()// 组件被启用时调用的函数，订阅事件
+        {
+            EventBus.OnDayEnd += OnEnterDialogue;//今天结束事件
+            EventBus.OnDialogueEnd += OnExitDialogue;//对话结束事件
+        }
+    void OnDisable()// 组件被关闭时调用的函数，取消订阅
+        {
+            EventBus.OnDayEnd -= OnEnterDialogue;
+            EventBus.OnDialogueEnd -= OnExitDialogue;
+        }
 
     // ====== 下面是通过事件监听调用的函数 ======
     void OnEnterDialogue(int day)   //对话开始，设置游戏状态：对话

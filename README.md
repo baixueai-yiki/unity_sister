@@ -23,9 +23,67 @@
 ## 数据设计
 
 
-
-# 开发指导
+# 开发计划
 ## 素材准备
+1.需要游戏角色的动作帧
+玩家：待机动作、行走动作
+（可能需要）NPC：待机动作、行走动作
+内容补充阶段：
+玩家角色与场景的互动动画
+（可能需要）攻击动作、施法动作
+我不会画人，所以这里选择AI生成动作帧
+2.需要中世纪小木屋的场景素材（不可互动）
+原木墙：需要预留立柱、末端等素材用于拼接建筑结构
+木版地板：
+选择个人绘制，在unity里切成瓦片后拼接成游戏场景
+
+3.需要小木屋内的装饰素材（按Q检视）
+床：
+床头柜上的留言羊皮纸：“注意身体健康！”
+床头柜上的插花：需要制作，提供清新buff（效果没想好）
+以及其他随着游戏进程逐渐出现的物品
+4.需要主要的游戏设施素材（按E使用）
+桌子：用于加工材料、储存少量物品
+壁炉：需要燃料，用于加工材料、提供温暖buff（效果没想好）
+货架：储存物品
+水缸：水缸有两个，可分别储存水。但水会变质，需要定期使用道具净化。河水不能喝
+应该也是自己画吧，可是现在都25号了，我希望一个月内做完这个项目，所以可能让ai画
+
+5.需要音效素材
+开门声：一天结束时，暗示妹妹回家
+
+## 脚本准备
+1.全局core
+EventBus.cs事件总线：整个项目一切事件都在这里注册，外部通过函数调用
+TimeSystem.cs时间系统：
+GameStateMachine.cs游戏状态机：管理游戏整体状态，如标题状态、游戏状态、对话状态
+
+2.玩家Game/Player
+PlayerStateMachine.cs玩家状态机：管理玩家的行为状态，如待机、行走、交互
+PlayerController.cs玩家控制器：读取玩家状态机判定操作权限，以此控制玩家的操作输入
+
+3.通用Game/Components
+CharacterMovement.cs控制移动：执行移动、扣除体力、调用移动动画
+CharacterAttributes.cs控制属性：管理角色的属性、buff（用于调整属性扣除与恢复）
+CharacterAnimation.cs控制动画：管理角色播放的动画类型，如移动时播放行走动画
+
+PositionClamp.cs位置钳：用于限制能去到的最大位置
+
+CharacterCombat.cs控制战斗
+（这个暂时不做）
+CharacterInteraction.cs控制交互
+（这个不应该在场景对象里面吗）
+
+4.UI/MenuScripts主菜单UI
+（这些目前啥都没做）
+5.UI/GameScripts游戏UI
+PlayerStatusUI.cs玩家状态ui：用于显示玩家的各项属性和buff
+TimeUI.cs时间ui：用于展示玩家之外的信息
+DialogueUI.cs对话框ui：用于展示对话内容
+
+## 剧情与文本准备
+
+
 1.设计玩家单位
 先放一个长方形充当美术素材
 创建脚本写控制代码，a向左移动 d向右移动 w与物体交互 s躺地上休息
@@ -41,121 +99,164 @@
 女主每天晚上回家时间半固定，拜托她买东西和加班都会晚回家
 先设计成固定对话，之后再补充逻辑
 
-## 场景结构
-MainMenu.unity/
 
-SampleScene.unity/
-├── Main Camera          # 正交摄像机
-├── Global Light 2D      # 
-├── Canvas/          # 画布
-│   ├── GamePlayUI
-│   │   ├── StoryManager.cs            # 故事控制器
-│   │   ├── PlayerStatusUI.cs          # 玩家属性UI
-│   │   ├── DialogueUI.cs              # 对话框UI
-│   │   └── TimeUI.cs                  # 时间ui
-│   ├── Text_Time           # 时间文本
-│   ├── Bar_Stamina         # 
-│   │   ├── Background      # 
-│   │   └── Fill Area       # 
-│   │       └── Fill        # 
-│   └── Panel_Dialogue
-│       ├── Text_Dialogue   # 对话文本
-│       └── Img_Dialogue    # 对话框
+# 开发指导
+## 场景结构
+Assets/             # 全局
+
+MainMenu.unity/     # 主菜单场景
+
+SampleScene.unity/  # 游戏场景
+├── EventSystem         # 事件系统（unity自带）
+├── Main Camera         # 正交摄像机
+│   ├── CameraFollow.cs                # 摄像机跟随
+│   └── PositionClamp.cs               # 位置钳（用于限制移动的最大位置）
+├── Global Light 2D     # (unity自带)
+├── EventBus            # 事件总线
+│   └── EventBus.cs
+├── TimeSystem          # 时间系统
+│   └── TimeSystem.cs
+├── GameStateMachine    # 全局状态机
+│   └── GameStateMachine.cs
+├── Canvas/             # 画布
+│   ├── HUDRoot         # 常驻UI：血量/时间PanelRoot
+│   │   │   ├── PlayerStatusUI.cs          # 玩家属性UI
+│   │   │   └── TimeUI.cs                  # 时间ui
+│   │   ├── Text_Time           # 时间文本
+│   │   └── Bar_Stamina         # 
+│   │       ├── Background      # 
+│   │       └── Fill Area       # 
+│   │           └── Fill        # 
+│   ├── PanelRoot       # 弹窗UI：背包/设置/对话
+│   │   │   ├── StoryManager.cs            # 故事控制器
+│   │   │   └── DialogueUI.cs              # 对话框UI
+│   │   ├── Panel_Dialogue
+│   │   ├── Text_Dialogue   # 对话文本
+│   │   └── Img_Dialogue    # 对话框
+│   └── PopupRoot       # 提示UI：获得物品
+│           └── ToastUI.cs                 # 提示ui
+│
 ├── Player           # 玩家对象
 │   │   ├── PlayerStateMachine.cs      # 玩家状态机
 │   │   ├── PlayerController.cs        # 玩家控制：WASD移动、速度、方向
-│   │   ├── PlayerAnimation.cs         # 玩家动画：走路、躺下、交互动作
-│   │   ├── PlayerStats.cs             # 玩家属性（体力、体温、饥饿等数据）
-│   │   ├── PlayerRest.cs              # 躺下/休息逻辑（体力/体温恢复）
-│   │   └── PlayerInteraction.cs       # 交互逻辑：床、冰箱、灶台等触发事件
+│   │   ├── PlayerInspect.cs           # 检视物品
+│   │   ├── PlayerInteraction.cs       # 交互物品：床、冰箱、灶台等触发事件
+│   │   ├── CharacterAnimation.cs      # 对象动画：走路、躺下、交互动作
+│   │   ├── CharacterAttributes.cs     # 对象属性（体力、体温、饥饿等数据）
+│   │   └── PositionClamp.cs           # 位置钳（用于限制移动的最大位置）
 │   └── Sprite
 │       └──(组件)Animator   # 动画控制器
-├── EventSystem      # 事件系统（unity自带）
-├── TimeSystem       # 时间系统
-│   └── TimeSystem.cs
-├── EventBus         # 时间总线
-│   └── EventBus.cs
-├── StoryManager     # 故事控制器
-│   └── StoryManager.cs
-├── GameStateMachine # 全局状态机
-│   └── GameStateMachine.cs
 ├── Grid             # 
 │   └── Tilemap             # 瓦片地图
 
+Test.unity/ # 测试地图
+├── Canvas/                 # 画布
+│   ├── SlotUI/             # 格子UI
+│   │   ├── Img_Icon                   # 物品图标
+│   │   ├── Img_Slot                   # 格子
+│   │   ├── Img_Highlight              # 高亮格子
+│   │   ├── Txet_Amount                # 显示数量
+│   │   └── Panel_Tooltip              # 提示面板
+│   │       └── Text_Description       # 物品介绍
+
 ## 目录结构
 Assets/
+├── Art/                   # 美术资源
+│   ├── Models/                            # 3D/2D模型
+│   ├── Textures/                          # 贴图
+│   │   ├── Actors/                        # 可交互物品（下面这些是可选的分层，目前不需要）
+│   │   │   ├── Crafting/# 工作台、熔炉
+│   │   │   ├── Storage/ # 箱子、货柜
+│   │   │   └── Interaction/# 按钮、拉杆
+│   │   ├── Items/                         # 游戏道具
+│   │   └── Props/                         # 装饰物品（检视）
+│   ├── Tiles/                             # 瓦片
+│   └── Materials/                         # 材质球
+├── Audio/                 # 音频资源
+│   ├── BGM/                               # 背景音乐
+│   └── SFX/                               # 音效（交互、脚步、警报）
+│
 ├── Core/                  # 全局系统
 │   ├── Systems/           # 系统
 │   │   ├── TimeSystem.cs                  # 时间系统
 │   │   └── GameStateMachine.cs            # 全局游戏状态机
 │   ├── Managers/          # 控制器
 │   │   ├── EventBus.cs                    # 事件总线
-│   │   └── StoryManager.cs                # 剧情控制器（放在core好像不太合适）
 │   └── SaveSystem/        # 存档系统
-├── Game/                  # 核心游戏模块
-│   ├── Components/        # 通用组件
-│   │   ├── Movement/      # 移动组件
-│   │   │   └── PositionClamp.cs           # 位置钳（用于限制移动的最大位置）
-│   │   └── Prefabs/       # 交互对象预制体
-│   │
-│   ├── Interaction/       # 可交互对象系统（床、冰箱、灶台）
-│   │   ├── Scripts/       # 交互逻辑、物品状态
-│   │   │   └── InteractableBase.cs        # 交互物体基类（床/门/道具）
-│   │   └── Prefabs/       # 交互对象预制体
-│   │
-│   ├── Player/            # 玩家系统
-│   │   ├── Scripts/       # 玩家控制、移动、交互逻辑
-│   │   │   ├── PlayerStateMachine.cs      # 玩家状态机
-│   │   │   ├── PlayerController.cs        # 玩家控制：WASD移动、速度、方向
-│   │   │   ├── PlayerAnimation.cs         # 玩家动画：走路、躺下、交互动作
-│   │   │   ├── PlayerStats.cs             # 玩家属性（体力、体温、饥饿等数据）
-│   │   │   ├── PlayerRest.cs              # 躺下/休息逻辑（体力/体温恢复）
-│   │   │   └── PlayerInteraction.cs       # 交互逻辑：床、冰箱、灶台等触发事件
-│   │   ├── Animations/    # 玩家动画（走路、躺下等）
-│   │   │   ├── Player_Idle
-│   │   │   └── Player_Walk
-│   │   └── Prefabs/       # 玩家预制体
-│   │
-│   └── UI/
-│       ├── MenuScripts/       # 菜单UI控制脚本（面板切换、提示）
-│       │   ├── MainMenuUI.cs              # 主菜单脚本
-│       │   ├── StartUI.cs                 # 启动游戏脚本
-│       │   ├── LoadUI.cs                  # 读取游戏脚本
-│       │   ├── CreditsUI.cs               # 致谢名单脚本
-│       │   └── SettingUI.cs               # 设置界面脚本
-│       ├── GameScripts/       # 游戏UI控制脚本
-│       │   ├── PlayerStatusUI.cs          # 玩家属性UI
-│       │   ├── DialogueUI.cs              # 对话框UI
-│       │   └── TimeUI.cs                  # 时间ui
-│       ├── Fonts/             # 字体
-│       ├── Sprites/           # 按钮/图标/背景等图片
-│       └── Panels/            # UI面板的Prefab预制体
-│
-├── Art/                   # 美术资源
-│   ├── Models/                            # 3D/2D模型
-│   ├── Textures/                          # 贴图
-│   ├── Tiles/                              # 瓦片
-│   └── Materials/                         # 材质球
-├── Audio/                 # 音频资源
-│   ├── BGM/                               # 背景音乐
-│   └── SFX/                               # 音效（交互、脚步、警报）
-│
 ├── Data/                  # 配置和静态数据
-│   ├── ScriptableObjects/ # 可配置的数据（如物品属性）
-│   ├── Stories/           # 剧情文本
-│   │   └── DailyStory.cs                  # 日常剧情
+│   ├── Save/              # 存档
+│   │   ├── SaveData.cs                    # 物品数据
 │   └── JSON/              # 剧情文本或简单配置表（但现在不用json系统，以后再考虑）
+│
+├── Game/                  # 核心游戏模块
+│   ├── Camera/
+│   │   └── CameraFollow.cs                # 摄像机跟随
+│   ├── Characters/        # 控制组件
+│   │   ├── CharacterAnimation.cs          # 对象动画：走路、躺下、交互动作
+│   │   ├── CharacterAttributes.cs         # 对象属性（体力、体温、饥饿等数据）
+│   │   ├── CharacterMovement.cs           # 对象移动
+│   │   └── PositionClamp.cs               # 位置钳（用于限制移动的最大位置）
+│   └── Player/
+│       ├── Scripts/       # 玩家脚本
+│       │   ├── PlayerController.cs        # 玩家控制：WASD移动、速度、方向
+│       │   ├── PlayerInspect.cs           # 玩家检视：躺下/休息逻辑（体力/体温恢复）
+│       │   ├── PlayerInteraction.cs       # 玩家互动：交互逻辑：床、冰箱、灶台等触发事件
+│       │   └── PlayerStateMachine.cs      # 玩家状态机
+│       ├── Animations/    # 玩家动画（走路、躺下等）
+│       │   ├── Player_Idle
+│       │   └── Player_Walk
+│       └── Prefabs/       # 玩家预制体
+│
 ├── Scenes/                # 场景文件夹
 │   ├── MainMenu/          # 主菜单场景
 │   │   └── MainMenu.unity                 # 主菜单场景
 │   ├── GamePlay/          # 游戏场景（房间）
 │   │   └── SampleScene.unity              # 游戏场景
 │   └── Test/              # 调试场景
-└── Settings/              # Unity项目设置（图形、输入、标签等）
-
+├── Settings/              # Unity项目设置（图形、输入、标签等）
+│
+├── Systems/               # 系统层
+│   ├── InventorySystem/   # 容器系统
+│   │   ├── Items/             # 物品
+│   │   │   ├── ItemData.cs                # 物品数据
+│   │   │   ├── ItemDatabase.cs            # 物品数据库
+│   │   │   └── ItemDatabase.asset         # 物品数据库
+│   │   └── Inventorys/        # 容器
+│   │       ├── PlayerInventory.cs         # 玩家容器（背包）
+│   │       └── InventorySlot.cs           # 容器格
+│   └── StorySystem/       # 剧情系统
+│       └── StoryManager.cs                # 剧情控制器
+├── Text/                  # 文本资源
+│   ├── Stories/           # 剧情文本
+│   │   └── DailyStory.cs                  # 日常剧情
+│   └── ToastData.cs                       # 提示文本
+├── UI/
+│   ├── MenuScripts/       # 主菜单脚本
+│   │   ├── MainMenuUI.cs                  # 主菜单脚本
+│   │   ├── StartUI.cs                     # 启动游戏脚本
+│   │   ├── LoadUI.cs                      # 读取游戏脚本
+│   │   ├── CreditsUI.cs                   # 致谢名单脚本
+│   │   └── SettingUI.cs                   # 设置界面脚本
+│   ├── GameScripts/       # 游戏脚本
+│   │   ├── InventoryUI/
+│   │   │   ├── PlayerInventoryUI.cs       # 玩家容器（背包）UI
+│   │   │   ├── TableInventoryUI.cs        # 桌子容器UI
+│   │   │   └── InventorySlotUI.cs         # 容器格ui（其他ui是复用这个的）
+│   │   ├── DialogueUI/
+│   │   │   └── DialogueUI.cs              # 对话框UI
+│   │   └── HUDRoot/        # 头显
+│   │       ├── PlayerStatusUI.cs          # 玩家属性UI
+│   │       └── TimeUI.cs                  # 时间ui
+│   ├── Fonts/              # 字体
+│   ├── Sprites/            # 按钮/图标/背景等图片（精灵）
+│   │   ├── Inventory/      # 容器精灵
+│   │   │   ├── Slot.png                   # 格子
+│   │   │   ├── Slot_Highlight.png         # 高亮格子
+│   └── Prefab/             # 场景UI的Prefab预制体
 ## 命名规范
 UI对象统一使用下划线命名法
 目录、脚本与类名统一使用驼峰命名法
+c#风格：变量名用小写开头，类用大写开头（但我目前好像没怎么遵循）
 
 
 ## 开发过程

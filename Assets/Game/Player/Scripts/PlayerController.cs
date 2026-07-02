@@ -11,10 +11,12 @@ public class PlayerController : MonoBehaviour
 {
     public GameStateMachine GSM;                    //引用：GameStateMachine全局游戏状态机
     public PlayerStateMachine PSM;                  //引用：PlayerControlState玩家输入状态
-    public PlayerRest rest;                         //引用：PlayerRest玩家休息脚本
-    public PlayerStats stats;                       //引用：PlayerStats玩家属性
-    public PlayerAnimation playerAnimation;         //引用：PlayerAnimation玩家动画，加player前缀是因为animation和unity自带的重名了
-    
+    public PlayerInspect playerInspect;             //引用：PlayerInspect检视物品脚本
+    public PlayerInteract playerInteract;           //引用：PlayerInteract互动物品脚本
+    public CharacterAttributes characterAttributes; //引用：CharacterAttributes控制属性
+    public CharacterAnimation characterAnimation;   //引用：CharacterAnimation控制动画
+    public ToastUI toastUI;                         //引用：ToastUI提示UI
+    public string otherName ;
     public float moveSpeed = 5f;                    // 声明小数变量 命名为moveSpeed = 玩家移动速度
     private Rigidbody2D rb2d;                       // 声明Rigidbody2D 物理组件，命名为rb
     private Vector2 moveInput;                      // 声明Vector2 二维向量，命名为moveInput
@@ -25,9 +27,10 @@ public class PlayerController : MonoBehaviour
         
         PSM = GetComponent<PlayerStateMachine>();           // 获取自身对象的 PlayerControlState 组件并赋值给 PSM
         //controller = GetComponent<PlayerController>();      // 获取自身对象的 PlayerController 组件并赋值给 controller
-        stats = GetComponent<PlayerStats>();                // 获取自身对象的 PlayerStats 组件并赋值给 stats
-        rest = GetComponent<PlayerRest>();                  // 获取自身对象的 PlayerRest 组件并赋值给 rest
-        playerAnimation = GetComponent<PlayerAnimation>();  // 获取自身对象的 PlayerAnimation 组件并赋值给 animation
+        characterAttributes = GetComponent<CharacterAttributes>();                // 获取自身对象的 PlayerStats 组件并赋值给 stats
+        playerInspect = GetComponent<PlayerInspect>();            // 获取自身对象的 PlayerInspect 组件并赋值给 inspect
+        playerInteract = GetComponent<PlayerInteract>();          // 获取自身对象的 PlayerInspect 组件并赋值给 inspect
+        characterAnimation = GetComponent<CharacterAnimation>();  // 获取自身对象的 PlayerAnimation 组件并赋值给 animation
         rb2d = GetComponent<Rigidbody2D>();                 // 获取自身对象的 Rigidbody2D 组件并赋值给 rb2d
     }
     void Start()    // 初始化时调用的函数
@@ -43,12 +46,11 @@ public class PlayerController : MonoBehaviour
             return;
         GameState(GSM.CurrentState);//游戏状态的影响
         MoveInput();        //移动输入
-        RestInput();        //休息输入
+        InspectInput();     //检视输入
+        InteractInput();    //互动输入
         MoveApply();        //移动执行
         StaminaApply();     //体力（消耗）执行
     }
-
-
 
 
 //------------------输入层-----------------------
@@ -65,19 +67,28 @@ public class PlayerController : MonoBehaviour
         PSM.SetFacingState(moveInput.x);//设置面朝状态
         PSM.SetPlayerState(moveInput.x);//设置玩家状态
         
-        //PSM.SetFacingState(moveFacing);            //调用PSM玩家状态机设置面朝方向状态的函数
+        //PSM.SetFacingState(moveFacing);//调用PSM玩家状态机设置面朝方向状态的函数，现在不用状态机设置了
         //playerAnimation.SetFacing();//调用设置面朝方向的函数，不过现在改成了每帧调用
     }
 
-    void RestInput()         //休息输入
+    void InspectInput()//检视输入
     {
-        if (!canRest)    //不允许休息则返回
+        if (!canInspect)
             return;
-        //若 unity输入系统.按下瞬间（s键） 
-        if (Input.GetKeyDown(KeyCode.S))
+        //若 unity输入系统.按下瞬间（Q键） 
+        if (Input.GetKeyDown(KeyCode.Q) && playerInspect != null)
         {
-            if (rest != null)
-                rest.StartRest();//调用休息脚本的休息函数
+            playerInspect.StartInspect();//调用检视脚本的检视函数
+        }
+    }
+
+    void InteractInput()//互动输入
+    {
+        if (!canInteract)
+            return;
+        if (Input.GetKeyDown(KeyCode.E) && playerInteract != null)
+        {
+            playerInteract.StartInteract();//调用互动脚本的互动函数
         }
     }
 //------------------执行层-----------------------
@@ -89,20 +100,20 @@ public class PlayerController : MonoBehaviour
 
     void StaminaApply()      //体力（消耗）执行
     {
-        if (stats == null)   //不存在stats玩家属性则返回
+        if (characterAttributes == null)   //不存在playerStats玩家属性则返回
             return;
 
         if (moveInput.x != 0)//若 移动输入.x 正在移动
         {
             //每帧扣体力 调用体力脚本的减少体力函数（每秒移动消耗的体力 乘以 Time.deltaTime）
-            stats.ConsumeStamina(stats.moveCostPerSecond * Time.deltaTime);
+            characterAttributes.ConsumeStamina(characterAttributes.moveCostPerSecond * Time.deltaTime);
         }
     }
 
 //-----------------状态控制----------------------
     public bool canMove = true;     // 移动权限
-    public bool canRest = true;     // 休息权限
-    public bool canInteract = true; // 
+    public bool canInspect = true;  // 检视权限
+    public bool canInteract = true; // 互动权限
 
     void GameState(GameStateMachine.GameState CurrentState)
     {
@@ -112,16 +123,16 @@ public class PlayerController : MonoBehaviour
                 Time.timeScale = 1f; //这玩意并不是我自己的时间系统，是unity自己的。时间流速设置成1防止无法走动
 
                 canMove = true;
+                canInspect = true;
                 canInteract = true;
-                canRest = true;
                 break;
 
             case GameStateMachine.GameState.Dialogue:
                 Time.timeScale = 0f;
 
                 canMove = false;
-                canInteract = false;
-                canRest = false;
+                canInspect = false;
+                canInteract = true;
                 //Panel_Dialogue.SetActive(true);     // 这里不应该管UI //这玩意还是以前在状态机里残留的注释
                 break;
 
@@ -129,8 +140,8 @@ public class PlayerController : MonoBehaviour
                 Time.timeScale = 0f;
 
                 canMove = false;
-                canInteract = false;
-                canRest = false;
+                canInspect = false;
+                canInteract = true;
                 break;
         }
     }

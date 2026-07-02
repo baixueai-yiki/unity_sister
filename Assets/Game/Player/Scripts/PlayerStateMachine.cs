@@ -5,8 +5,8 @@ using UnityEngine;                 //导入Unity常用库
 // 而是直接从PlayerController调用函数并传入参数
 public class PlayerStateMachine : MonoBehaviour
 {
-    public EventBus eventBus;               //引用：EventBus事件总线，用来监听事件
-    public PlayerController controller;     //引用：PlayerController玩家控制脚本
+    //public EventBus eventBus;               //引用：EventBus事件总线，用来监听事件
+    public PlayerController playerController;     //引用：PlayerController玩家控制脚本
     //public PlayerAnimation playerAnimation; //引用：PlayerAnimation玩家动画，加player前缀是因为animation和unity自带的重名了
     //private Rigidbody2D rb2d;               // 声明Rigidbody2D 物理组件，命名为rb
 
@@ -24,9 +24,9 @@ public class PlayerStateMachine : MonoBehaviour
     //场景加载时调用一次的函数
     void Awake()
     {
-        eventBus = GameObject.Find("EventBus").GetComponent<EventBus>();// 获取外部对象的EventBus组件并赋值给 eventBus
+        //eventBus = GameObject.Find("EventBus").GetComponent<EventBus>();// 获取外部对象的EventBus组件并赋值给 eventBus
         
-        controller = GetComponent<PlayerController>();      // 获取自身对象的PlayerController组件并赋值给 controller
+        playerController = GetComponent<PlayerController>();      // 获取自身对象的PlayerController组件并赋值给 controller
         //playerAnimation = GetComponent<PlayerAnimation>();  // 获取自身对象的 PlayerAnimation 组件并赋值给 animation
         //rb2d = GetComponent<Rigidbody2D>();                 // 获取自身对象的 Rigidbody2D 组件并赋值给 rb2d
     }
