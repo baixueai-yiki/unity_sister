@@ -20,9 +20,22 @@ public static class EventBus
     public static void RaiseDialogueEnd()
         => OnDialogueEnd?.Invoke();     //广播事件：对话结束
 
-    // 由InventorySystem调用，由InventoryUI监听。全量刷新：用于提醒全部容器格刷新UI表现
-    public static event Action OnInventoryChanged;
-    public static void RaiseInventoryChanged()
-        => OnInventoryChanged?.Invoke();//广播事件：容器变化（物品添加或减少）
-
+    // 由InventorySystem调用，由各种InventoryUI监听。传入id定位刷新容器，传入索引定位刷新格子
+    public static event Action<int> OnPlayerInventoryChanged;
+    //public static event Action<int> OnTableInventoryChanged;
+    public static void RaiseInventoryChanged(string InventoryID, int index)
+    {
+        switch (InventoryID)
+        {
+            case "PlayerInventory":
+                OnPlayerInventoryChanged?.Invoke(index);//广播事件：玩家容器变化（玩家背包）
+                break;
+            // case "TableInventory":
+            //     OnTableInventoryChanged?.Invoke(index);//广播事件：桌子容器变化（桌子储存格）
+            //     break;
+            default:
+                Debug.LogWarning("Unhandled inventory ID: " + InventoryID);
+                return;
+        }
+    }
 }

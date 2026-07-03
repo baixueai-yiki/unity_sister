@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: ItemDatabase
   m_EditorClassIdentifier: 
   items:
-  - Id: apple
-    Name: "\u82F9\u679C"
-    Description: "\u767D\u96EA\u7684\u82F9\u679C"
-    Icon: {fileID: -7832214784768987486, guid: 7b4d86df1a0e6574ca500cf7cd713b5b, type: 3}
-    MaxStack: 1
+  - id: apple
+    name: "\u82F9\u679C"
+    description: "\u767D\u96EA\u7684\u82F9\u679C"
+    icon: {fileID: -7832214784768987486, guid: 7b4d86df1a0e6574ca500cf7cd713b5b, type: 3}
+    maxStack: 1

@@ -238,21 +238,25 @@ Assets/
 │   │   ├── CreditsUI.cs                   # 致谢名单脚本
 │   │   └── SettingUI.cs                   # 设置界面脚本
 │   ├── GameScripts/       # 游戏脚本
-│   │   ├── InventoryUI/
-│   │   │   ├── PlayerInventoryUI.cs       # 玩家容器（背包）UI
-│   │   │   ├── TableInventoryUI.cs        # 桌子容器UI
-│   │   │   └── InventorySlotUI.cs         # 容器格ui（其他ui是复用这个的）
-│   │   ├── DialogueUI/
+│   │   │── HUDRoot/       # 头显
+│   │   │   ├── PlayerStatusUI.cs          # 玩家属性UI
+│   │   │   └── TimeUI.cs                  # 时间ui
+│   │   │── PanelRoot/     # 弹窗UI：背包/设置/对话
+│   │   │   ├── InventoryUI/
+│   │   │   │   ├── PlayerInventoryUI.cs   # 玩家容器（背包）UI
+│   │   │   │   ├── TableInventoryUI.cs    # 桌子容器UI
+│   │   │   │   └── InventorySlotUI.cs     # 容器格ui（其他ui是复用这个的）
 │   │   │   └── DialogueUI.cs              # 对话框UI
-│   │   └── HUDRoot/        # 头显
-│   │       ├── PlayerStatusUI.cs          # 玩家属性UI
-│   │       └── TimeUI.cs                  # 时间ui
-│   ├── Fonts/              # 字体
-│   ├── Sprites/            # 按钮/图标/背景等图片（精灵）
-│   │   ├── Inventory/      # 容器精灵
+│   │   │── PopupRoot/     # 弹窗UI：背包/设置/对话
+│   │   │   └── ToastUI.cs                 # 对话框UI
+│   │   └── DragLayer/     # 拖拽物品
+│   │       └── DragItemUI.cs              # 玩家属性UI
+│   ├── Fonts/             # 字体
+│   ├── Sprites/           # 按钮/图标/背景等图片（精灵）
+│   │   ├── Inventory/     # 容器精灵
 │   │   │   ├── Slot.png                   # 格子
 │   │   │   ├── Slot_Highlight.png         # 高亮格子
-│   └── Prefab/             # 场景UI的Prefab预制体
+│   └── Prefab/            # 场景UI的Prefab预制体
 ## 命名规范
 UI对象统一使用下划线命名法
 目录、脚本与类名统一使用驼峰命名法

@@ -46,11 +46,8 @@ public class PlayerInteract : MonoBehaviour//使用物品
             //EventBus.RaiseInteractEvent(interactName, interactTarget);//广播互动事件
             
             //playerInventory = GetComponent<PlayerInventory>();  // 获取自身对象的 PlayerInventory 组件
-
-            InventorySystem.AddItem(playerInventory.slots, itemDatabase, "apple", 1);
+            
+            InventorySystem.AddItem("PlayerInventory", playerInventory.slots, itemDatabase, "apple", 1);
         }
-
-
-
     }
 }
