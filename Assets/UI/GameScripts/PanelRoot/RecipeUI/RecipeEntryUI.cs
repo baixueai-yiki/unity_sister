@@ -30,25 +30,25 @@ public class RecipeEntryUI : MonoBehaviour
     //private Image[] resultIcons;               // 结果图标数组
 
     
-    public void SetRecipe(string recipeId)//设置配方条目的数据(传入配方id的参数)
+    public void SetRecipe(string recipe)//设置配方条目的数据(传入配方id的参数)
     {
-        recipeID = recipeId;//这个id变量其实可以删掉，直接用recipeData.id
+        //recipeID = recipeId;//这个id变量其实可以删掉，直接用recipeData.id
         //不过我后面打算改成传入recipe本体，到时候大改一下
-        recipeData = recipeDatabase.GetRecipeData(recipeId);
+        //recipeData = recipeDatabase.GetRecipeData(recipeId);
 
         Img_RecipeIcon.sprite = recipeData.icon;
         Text_RecipeName.text = recipeData.name;
         Text_Description.text = recipeData.description;
 
-        Img_RecipeIcon1.sprite = itemDatabase.GetItemData(recipeData.recipeItemID1).icon;
-        Img_RecipeIcon2.sprite = itemDatabase.GetItemData(recipeData.recipeItemID2).icon;
-        Img_RecipeIcon3.sprite = itemDatabase.GetItemData(recipeData.recipeItemID3).icon;
-        Img_RecipeIcon4.sprite = itemDatabase.GetItemData(recipeData.recipeItemID4).icon;
+        Img_RecipeIcon1.sprite = itemDatabase.GetItemData(recipe.RecipeItemID[0]).icon;
+        Img_RecipeIcon1.sprite = itemDatabase.GetItemData(recipe.RecipeItemID[1]).icon;
+        Img_RecipeIcon1.sprite = itemDatabase.GetItemData(recipe.RecipeItemID[2]).icon;
+        Img_RecipeIcon1.sprite = itemDatabase.GetItemData(recipe.RecipeItemID[3]).icon;
         Img_CraftArrow.sprite = recipeData.craftArrow;
-        Img_ResultIcon1.sprite = itemDatabase.GetItemData(recipeData.resultItemID1).icon;
-        Img_ResultIcon2.sprite = itemDatabase.GetItemData(recipeData.resultItemID2).icon;
-        Img_ResultIcon3.sprite = itemDatabase.GetItemData(recipeData.resultItemID3).icon;
-        Img_ResultIcon4.sprite = itemDatabase.GetItemData(recipeData.resultItemID4).icon;
+        Img_RecipeIcon1.sprite = itemDatabase.GetItemData(recipe.ResultItemID[0]).icon;
+        Img_RecipeIcon1.sprite = itemDatabase.GetItemData(recipe.ResultItemID[1]).icon;
+        Img_RecipeIcon1.sprite = itemDatabase.GetItemData(recipe.ResultItemID[2]).icon;
+        Img_RecipeIcon1.sprite = itemDatabase.GetItemData(recipe.ResultItemID[3]).icon;
     }
 
 

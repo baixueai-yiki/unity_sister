@@ -57,7 +57,7 @@ public class RecipeUI : MonoBehaviour
     private bool CanCraft(RecipeData recipe)
     {
         InventorySlot[] slots = inventory.GetSlots();
-        //遍历配方中的四种材料
+        //遍历配方中的材料数组
         foreach (string recipeID in recipe.RecipeID)
         {
             //空材料直接跳过
@@ -67,7 +67,7 @@ public class RecipeUI : MonoBehaviour
             //记录当前材料是否找到
             bool found = false;
 
-            //遍历桌子容器
+            //遍历桌子容器数组
             foreach (InventorySlot slot in slots)
             {
                 //找到需要的材料
