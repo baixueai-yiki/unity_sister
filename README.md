@@ -130,8 +130,36 @@ SampleScene.unity/  # 游戏场景
 │   ├── PanelRoot       # 弹窗UI：背包/设置/对话
 │   │   │   ├── StoryManager.cs            # 故事控制器
 │   │   │   └── DialogueUI.cs              # 对话框UI
-│   │   ├── Panel_Dialogue
-│   │   ├── Text_Dialogue   # 对话文本
+│   │   ├── Panel_Dialogue      # 对话面版
+│   │   │   ├── Text_Dialogue
+│   │   │   └── Img_Dialogue
+│   │   ├── Panel_PlayerInventoryUI # 玩家背包UI面版
+│   │   │   └── PlayerInventoryUI
+│   │   │       └── UISlot
+│   │   ├── Panel_TableUI  # 桌子UI面版
+│   │   │   ├── TableInventoryUI    # 桌子容器UI
+│   │   │   │   ├── UISlot
+│   │   │   │   ├── UISlot
+│   │   │   │   ├── UISlot
+│   │   │   │   └── UISlot
+│   │   │   └── RecipeUI            # 合成UI
+│   │   │       ├── Viewport
+│   │   │       │   └── Content
+│   │   │       │       └── RecipeEntryUI
+│   │   │       │           ├── Button_Craft
+│   │   │       │           ├── Img_ItemIcon
+│   │   │       │           ├── Txet_ItemId
+│   │   │       │           ├── Text_Description
+│   │   │       │           ├── Img_RecipeIcon1 #配方图标1
+│   │   │       │           ├── Img_RecipeIcon2
+│   │   │       │           ├── Img_RecipeIcon3
+│   │   │       │           ├── Img_RecipeIcon4
+│   │   │       │           ├── Img_CraftArrow
+│   │   │       │           ├── Img_ResultIcon1 #结果图标1
+│   │   │       │           ├── Img_ResultIcon2
+│   │   │       │           ├── Img_ResultIcon3
+│   │   │       │           └── Img_ResultIcon4
+│   │   │       └── Scrollbar Vertical
 │   │   └── Img_Dialogue    # 对话框
 │   └── PopupRoot       # 提示UI：获得物品
 │           └── ToastUI.cs                 # 提示ui
@@ -177,6 +205,10 @@ Assets/
 │   └── SFX/                               # 音效（交互、脚步、警报）
 │
 ├── Core/                  # 全局系统
+│   ├── Interfaces
+│   │   └── ItemSystem/
+│   │       ├── IInteractable.cs
+│   │       └── 
 │   ├── Systems/           # 系统
 │   │   ├── TimeSystem.cs                  # 时间系统
 │   │   └── GameStateMachine.cs            # 全局游戏状态机
@@ -189,7 +221,12 @@ Assets/
 │   └── JSON/              # 剧情文本或简单配置表（但现在不用json系统，以后再考虑）
 │
 ├── Game/                  # 核心游戏模块
-│   ├── Camera/
+│   ├── Actors/            # 场景道具
+│   │   ├── TableActor.cs          # 对象动画：走路、躺下、交互动作
+│   │   ├── AppleActor.cs         # 对象属性（体力、体温、饥饿等数据）
+│   │   ├── CharacterMovement.cs           # 对象移动
+│   │   └── PositionClamp.cs               # 位置钳（用于限制移动的最大位置）
+│   ├── Camera/            # 摄像机
 │   │   └── CameraFollow.cs                # 摄像机跟随
 │   ├── Characters/        # 控制组件
 │   │   ├── CharacterAnimation.cs          # 对象动画：走路、躺下、交互动作
@@ -216,20 +253,36 @@ Assets/
 ├── Settings/              # Unity项目设置（图形、输入、标签等）
 │
 ├── Systems/               # 系统层
-│   ├── InventorySystem/   # 容器系统
-│   │   ├── Items/             # 物品
-│   │   │   ├── ItemData.cs                # 物品数据
-│   │   │   ├── ItemDatabase.cs            # 物品数据库
-│   │   │   └── ItemDatabase.asset         # 物品数据库
-│   │   └── Inventorys/        # 容器
-│   │       ├── PlayerInventory.cs         # 玩家容器（背包）
-│   │       └── InventorySlot.cs           # 容器格
+│   ├── ItemSystem/        # 物品系统
+│   │   ├──  DragLayer/    # 拖动者
+│   │   │   ├── //DragInventory.cs         # 拖动容器（一种简化的背包，或取巧的拖动系统）这里不用
+│   │   │   └── DragSystem.cs              # 拖动系统（一种复杂的容器格互动逻辑）
+│   │   ├── Inventorys/        # 容器
+│   │   │   ├── InventorySlot.cs           # 容器格
+│   │   │   ├── InventorySystem.cs         # 容器系统
+│   │   │   ├── PlayerInventory.cs         # 玩家容器（背包）
+│   │   │   └── TableInventory.cs          # 桌子容器（工作台）
+│   │   └── Items/             # 物品
+│   │       ├── ItemData.cs                # 物品数据
+│   │       ├── ItemDatabase.cs            # 物品数据库
+│   │       └── ItemDatabase.asset         # 物品数据库
 │   └── StorySystem/       # 剧情系统
 │       └── StoryManager.cs                # 剧情控制器
-├── Text/                  # 文本资源
+├── Text/                  # 文本资源Tools
 │   ├── Stories/           # 剧情文本
 │   │   └── DailyStory.cs                  # 日常剧情
 │   └── ToastData.cs                       # 提示文本
+├── Tool                   # 开发工具
+│   └── ExcelImporter      # Excel输入
+│       ├── Core
+│       │   ├── ExcelReader.cs              # 读取excel文件
+│       │   └── DatabaseImporterWindow.cs   # Unity编辑器里的按钮入口
+│       ├── DTO
+│       │   ├── ItemDataDTO.cs              # 暂存excel的ItemData数据
+│       │   └── RecipeDataDTO.cs            # 暂存excel的RecipeData数据
+│       └── Exporter
+│           ├── JsonExporter.cs             # 输出为json文件
+│           └── AssetExporter.cs            # 输出为asset文件
 ├── UI/
 │   ├── MenuScripts/       # 主菜单脚本
 │   │   ├── MainMenuUI.cs                  # 主菜单脚本
@@ -241,22 +294,20 @@ Assets/
 │   │   │── HUDRoot/       # 头显
 │   │   │   ├── PlayerStatusUI.cs          # 玩家属性UI
 │   │   │   └── TimeUI.cs                  # 时间ui
-│   │   │── PanelRoot/     # 弹窗UI：背包/设置/对话
+│   │   │── PanelRoot/     # 弹窗：背包/设置/对话
 │   │   │   ├── InventoryUI/
-│   │   │   │   ├── PlayerInventoryUI.cs   # 玩家容器（背包）UI
-│   │   │   │   ├── TableInventoryUI.cs    # 桌子容器UI
+│   │   │   │   ├── InventoryUI.cs         # 容器UI
 │   │   │   │   └── InventorySlotUI.cs     # 容器格ui（其他ui是复用这个的）
 │   │   │   └── DialogueUI.cs              # 对话框UI
-│   │   │── PopupRoot/     # 弹窗UI：背包/设置/对话
-│   │   │   └── ToastUI.cs                 # 对话框UI
-│   │   └── DragLayer/     # 拖拽物品
-│   │       └── DragItemUI.cs              # 玩家属性UI
+│   │   └── PopupRoot/     # 提示：
+│   │       └── ToastUI.cs                 # 对话框UI
 │   ├── Fonts/             # 字体
 │   ├── Sprites/           # 按钮/图标/背景等图片（精灵）
 │   │   ├── Inventory/     # 容器精灵
-│   │   │   ├── Slot.png                   # 格子
-│   │   │   ├── Slot_Highlight.png         # 高亮格子
+│   │       ├── Slot.png                   # 格子
+│   │       ├── Slot_Highlight.png         # 高亮格子
 │   └── Prefab/            # 场景UI的Prefab预制体
+
 ## 命名规范
 UI对象统一使用下划线命名法
 目录、脚本与类名统一使用驼峰命名法

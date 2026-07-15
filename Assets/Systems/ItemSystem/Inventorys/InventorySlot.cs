@@ -5,6 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class InventorySlot  //声明一个名为InventorySlot容器格 的全局类。用于储存从物品类读取到的数据
 {
-    public string itemId;   //物品ID
-    public int amount;      //物品数量
+    //public int index;       //格子索引（用于指引ui交互）
+    public string itemId = "";   //物品ID
+    public int amount = 0;      //物品数量
 }

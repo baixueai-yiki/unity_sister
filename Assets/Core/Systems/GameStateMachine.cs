@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class GameStateMachine : MonoBehaviour
 {
-    //public EventBus eventBus;                   //引用：EventBus事件总线，用来监听事件
+    //public EventBus eventBus;                   //引用：EventBus事件总线，用来监听事件//现在改成静态了
     public PlayerController playerController;   //引用：PlayerController玩家控制脚本
     
 
@@ -12,6 +12,7 @@ public class GameStateMachine : MonoBehaviour
     public enum GameState
     {
         Play,
+        Interact,
         Dialogue,
         Pause
     }
@@ -43,20 +44,29 @@ public class GameStateMachine : MonoBehaviour
 
     void OnEnable()// 组件被启用时调用的函数，订阅事件
         {
-            EventBus.OnDayEnd += OnEnterDialogue;//今天结束事件
-            EventBus.OnDialogueEnd += OnExitDialogue;//对话结束事件
+            EventBus.OnPlay += Play;//正在玩事件
+            EventBus.OnInteract += Interact;//正在互动事件
+            EventBus.OnDayEnd += EnterDialogue;//今天结束事件
+            EventBus.OnDialogueEnd += ExitDialogue;//对话结束事件
         }
     void OnDisable()// 组件被关闭时调用的函数，取消订阅
         {
-            EventBus.OnDayEnd -= OnEnterDialogue;
-            EventBus.OnDialogueEnd -= OnExitDialogue;
+            EventBus.OnPlay -= Play;
+            EventBus.OnInteract -= Interact;
+            EventBus.OnDayEnd -= EnterDialogue;
+            EventBus.OnDialogueEnd -= ExitDialogue;
         }
 
     // ====== 下面是通过事件监听调用的函数 ======
-    void OnEnterDialogue(int day)   //对话开始，设置游戏状态：对话
+    void Play()                 //互动开始，设置游戏状态：Play玩
+     => SetGameState(GameState.Play);
+    void Interact()               //互动开始，设置游戏状态：Interact互动
+     => SetGameState(GameState.Interact);
+
+    void EnterDialogue(int day)   //对话开始，设置游戏状态：Dialogue对话
      => SetGameState(GameState.Dialogue);
 
-    void OnExitDialogue()           //对话结束，设置游戏状态：玩
+    void ExitDialogue()           //对话结束，设置游戏状态：Play玩
      => SetGameState(GameState.Play);
 
     // void HandlePauseRequest()    //现在还没有地方需要暂停
@@ -65,13 +75,12 @@ public class GameStateMachine : MonoBehaviour
     // 监听不同事件最终指向的是同一个函数，并且传入了GameState枚举的值，用来精准修改状态
     private void SetGameState(GameState newState)
     {
-        if (CurrentState == 0 || CurrentState == newState)
+        // CurrentState的默认值应该是0才对，这里临时写成错误的null
+        if (CurrentState == null || CurrentState == newState)
             return;
-
         //OnExit(CurrentState);       //结束状态时执行,迁移到了PlayerController
 
         CurrentState = newState;    //将旧状态设置为新状态
-
         //OnEnter(newState);          //开始状态时执行，不需要了
     }
 

@@ -13,8 +13,183 @@ MonoBehaviour:
   m_Name: ItemDatabase
   m_EditorClassIdentifier: 
   items:
-  - id: apple
+  - id: test_apple
     name: "\u82F9\u679C"
     description: "\u767D\u96EA\u7684\u82F9\u679C"
     icon: {fileID: -7832214784768987486, guid: 7b4d86df1a0e6574ca500cf7cd713b5b, type: 3}
     maxStack: 1
+    calorie: 0
+    protein: 0
+    vitamin: 0
+    disgust: 0
+    healthImpact: 0
+  - id: test_orange
+    name: "\u6A59\u5B50"
+    description: "\u6D4B\u8BD5\u7528\u7684\u6A59\u5B50"
+    icon: {fileID: -6410442598547967069, guid: d192cb2676860464ba07b8434cbb6a1a, type: 3}
+    maxStack: 1
+    calorie: 0
+    protein: 0
+    vitamin: 0
+    disgust: 0
+    healthImpact: 0
+  - id: core_lf_oak
+    name: "\u6A61\u6728"
+    description: "\u4E00\u6BB5\u6A61\u6811\u539F\u6728"
+    icon: {fileID: 0}
+    maxStack: 1
+    calorie: 0
+    protein: 0
+    vitamin: 0
+    disgust: 0
+    healthImpact: 0
+  - id: core_lf_oakbark
+    name: "\u6A61\u6811\u76AE"
+    description: "\u5BCC\u542B\u5355\u5B81\u9178"
+    icon: {fileID: 0}
+    maxStack: 1
+    calorie: 0
+    protein: 0
+    vitamin: 0
+    disgust: 0
+    healthImpact: 0
+  - id: core_lf_beech
+    name: "\u5C71\u6BDB\u6989\u6728"
+    description: "\u4E00\u6BB5\u5C71\u6BDB\u6989\u539F\u6728"
+    icon: {fileID: 0}
+    maxStack: 1
+    calorie: 0
+    protein: 0
+    vitamin: 0
+    disgust: 0
+    healthImpact: 0
+  - id: core_lf_beechbark
+    name: "\u5C71\u6BDB\u6866\u6811\u76AE"
+    description: "\u5C71\u6BDB\u6866\u6811\u76AE"
+    icon: {fileID: 0}
+    maxStack: 1
+    calorie: 0
+    protein: 0
+    vitamin: 0
+    disgust: 0
+    healthImpact: 0
+  - id: core_lf_elm
+    name: "\u6986\u6728"
+    description: "\u4E00\u6BB5\u6986\u6811\u539F\u6728"
+    icon: {fileID: 0}
+    maxStack: 1
+    calorie: 0
+    protein: 0
+    vitamin: 0
+    disgust: 0
+    healthImpact: 0
+  - id: core_lf_elmbark
+    name: "\u6986\u6811\u76AE"
+    description: "\u6986\u6811\u76AE"
+    icon: {fileID: 0}
+    maxStack: 1
+    calorie: 0
+    protein: 0
+    vitamin: 0
+    disgust: 0
+    healthImpact: 0
+  - id: core_lf_ash
+    name: "\u767D\u8721\u6728"
+    description: "\u4E00\u6BB5\u767D\u8721\u6811\u539F\u6728"
+    icon: {fileID: 0}
+    maxStack: 1
+    calorie: 0
+    protein: 0
+    vitamin: 0
+    disgust: 0
+    healthImpact: 0
+  - id: core_lf_ashbark
+    name: "\u767D\u8721\u6811\u76AE"
+    description: "\u53EF\u7528\u4E8E\u9000\u70E7"
+    icon: {fileID: 0}
+    maxStack: 1
+    calorie: 0
+    protein: 0
+    vitamin: 0
+    disgust: 0
+    healthImpact: 0
+  - id: core_lf_pine
+    name: "\u677E\u6728"
+    description: "\u4E00\u6BB5\u677E\u6811\u539F\u6728"
+    icon: {fileID: 0}
+    maxStack: 1
+    calorie: 0
+    protein: 0
+    vitamin: 0
+    disgust: 0
+    healthImpact: 0
+  - id: core_lf_pinebark
+    name: "\u677E\u6811\u76AE"
+    description: "\u677E\u6811\u76AE"
+    icon: {fileID: 0}
+    maxStack: 1
+    calorie: 0
+    protein: 0
+    vitamin: 0
+    disgust: 0
+    healthImpact: 0
+  - id: core_lf_birch
+    name: "\u6866\u6728"
+    description: "\u4E00\u6BB5\u6866\u6811\u539F\u6728"
+    icon: {fileID: 0}
+    maxStack: 1
+    calorie: 0
+    protein: 0
+    vitamin: 0
+    disgust: 0
+    healthImpact: 0
+  - id: core_lf_birchbark
+    name: "\u6866\u6811\u76AE"
+    description: "\u6866\u6811\u76AE"
+    icon: {fileID: 0}
+    maxStack: 1
+    calorie: 0
+    protein: 0
+    vitamin: 0
+    disgust: 0
+    healthImpact: 0
+  - id: core_lf_yew
+    name: "\u7D2B\u886B\u6728"
+    description: "\u4E00\u6BB5\u7D2B\u886B\u6811\u539F\u6728"
+    icon: {fileID: 0}
+    maxStack: 1
+    calorie: 0
+    protein: 0
+    vitamin: 0
+    disgust: 0
+    healthImpact: 0
+  - id: core_lf_yewbark
+    name: "\u7D2B\u886B\u6811\u76AE"
+    description: "\u5267\u6BD2"
+    icon: {fileID: 0}
+    maxStack: 1
+    calorie: 0
+    protein: 0
+    vitamin: 0
+    disgust: 0
+    healthImpact: 0
+  - id: core_lf_chestnut
+    name: "\u6817\u6728"
+    description: "\u4E00\u6BB5\u6817\u6811\u539F\u6728"
+    icon: {fileID: 0}
+    maxStack: 1
+    calorie: 0
+    protein: 0
+    vitamin: 0
+    disgust: 0
+    healthImpact: 0
+  - id: core_lf_chestnutbark
+    name: "\u6817\u6811\u76AE"
+    description: "\u6817\u6811\u76AE"
+    icon: {fileID: 0}
+    maxStack: 1
+    calorie: 0
+    protein: 0
+    vitamin: 0
+    disgust: 0
+    healthImpact: 0

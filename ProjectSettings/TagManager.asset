@@ -6,6 +6,7 @@ TagManager:
   tags:
   - inspect
   - interact
+  - pick
   layers:
   - Default
   - TransparentFX

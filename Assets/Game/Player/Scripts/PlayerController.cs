@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     public PlayerStateMachine PSM;                  //引用：PlayerControlState玩家输入状态
     public PlayerInspect playerInspect;             //引用：PlayerInspect检视物品脚本
     public PlayerInteract playerInteract;           //引用：PlayerInteract互动物品脚本
+    public PlayerPick playerPick;                   //引用：PlayerPick拾取物品脚本
     public CharacterAttributes characterAttributes; //引用：CharacterAttributes控制属性
     public CharacterAnimation characterAnimation;   //引用：CharacterAnimation控制动画
     public ToastUI toastUI;                         //引用：ToastUI提示UI
@@ -27,10 +28,12 @@ public class PlayerController : MonoBehaviour
         
         PSM = GetComponent<PlayerStateMachine>();           // 获取自身对象的 PlayerControlState 组件并赋值给 PSM
         //controller = GetComponent<PlayerController>();      // 获取自身对象的 PlayerController 组件并赋值给 controller
-        characterAttributes = GetComponent<CharacterAttributes>();                // 获取自身对象的 PlayerStats 组件并赋值给 stats
+        
         playerInspect = GetComponent<PlayerInspect>();            // 获取自身对象的 PlayerInspect 组件并赋值给 inspect
         playerInteract = GetComponent<PlayerInteract>();          // 获取自身对象的 PlayerInspect 组件并赋值给 inspect
+        playerPick = GetComponent<PlayerPick>();                  // 获取自身对象的 PlayerPick 组件并赋值给 playerPick
         characterAnimation = GetComponent<CharacterAnimation>();  // 获取自身对象的 PlayerAnimation 组件并赋值给 animation
+        characterAttributes = GetComponent<CharacterAttributes>();// 获取自身对象的 PlayerStats 组件并赋值给 stats
         rb2d = GetComponent<Rigidbody2D>();                 // 获取自身对象的 Rigidbody2D 组件并赋值给 rb2d
     }
     void Start()    // 初始化时调用的函数
@@ -49,6 +52,7 @@ public class PlayerController : MonoBehaviour
         InspectInput();     //检视输入
         InteractInput();    //互动输入
         MoveApply();        //移动执行
+        PickApply();        //拾取执行
         StaminaApply();     //体力（消耗）执行
     }
 
@@ -91,11 +95,20 @@ public class PlayerController : MonoBehaviour
             playerInteract.StartInteract();//调用互动脚本的互动函数
         }
     }
+
+    
 //------------------执行层-----------------------
     void MoveApply()        //移动执行
     {
         //刚体rb2d.当前（移动）速度 = 创建一个二维速度（x轴输入 * 移动速度变量，垂直速度保持不变）
         rb2d.linearVelocity = new Vector2(moveInput.x * moveSpeed, rb2d.linearVelocity.y);
+    }
+
+    void PickApply()//拾取执行
+    {
+        if (!canPick)
+            return;
+        playerPick.PickItem();//调用互动脚本的互动函数
     }
 
     void StaminaApply()      //体力（消耗）执行
@@ -111,9 +124,11 @@ public class PlayerController : MonoBehaviour
     }
 
 //-----------------状态控制----------------------
+    public string State;            // 游戏模式
     public bool canMove = true;     // 移动权限
     public bool canInspect = true;  // 检视权限
     public bool canInteract = true; // 互动权限
+    public bool canPick = true;     // 拾取权限
 
     void GameState(GameStateMachine.GameState CurrentState)
     {
@@ -121,27 +136,39 @@ public class PlayerController : MonoBehaviour
         {
             case GameStateMachine.GameState.Play:
                 Time.timeScale = 1f; //这玩意并不是我自己的时间系统，是unity自己的。时间流速设置成1防止无法走动
-
+                State = "Play";
                 canMove = true;
                 canInspect = true;
                 canInteract = true;
+                canPick = true;
+                break;
+
+            case GameStateMachine.GameState.Interact:
+                Time.timeScale = 0f;
+                State = "Interact";
+                canMove = false;
+                canInspect = false;
+                canInteract = true;
+                canPick = false;
                 break;
 
             case GameStateMachine.GameState.Dialogue:
                 Time.timeScale = 0f;
-
+                State = "Dialogue";
                 canMove = false;
                 canInspect = false;
-                canInteract = true;
+                canInteract = false;
+                canPick = false;
                 //Panel_Dialogue.SetActive(true);     // 这里不应该管UI //这玩意还是以前在状态机里残留的注释
                 break;
 
             case GameStateMachine.GameState.Pause:
                 Time.timeScale = 0f;
-
+                State = "Pause";
                 canMove = false;
                 canInspect = false;
-                canInteract = true;
+                canInteract = false;
+                canPick = false;
                 break;
         }
     }

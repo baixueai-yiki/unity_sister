@@ -5,29 +5,21 @@ public static class InventorySystem
 {
 
     //public ItemDatabase itemDatabase;//引用：物品数据库//静态不支持实例化，现在改成把参数传进来用
+    //public InventorySlot[] slots;// 所有格子数据
 
 
-    
-    // 所有格子数据
-    //public InventorySlot[] slots;
-
-    /*/ 构造函数：创建不同容量的容器 我现在不知道这个是干啥的
-    public InventorySystem(int size)
+    // 添加物品的函数(inventoryID容器ID，slots数组ID，itemDatabase物品数据库，index索引，itemId物品id，amount添加数量)
+    public static bool AddItem(string inventoryID, InventorySlot[] slots, ItemDatabase itemDatabase, int index, string addItemId, int addAmount)
     {
-        slots = new InventorySlot[size];
-
-        for (int i = 0; i < slots.Length; i++)
+        if (slots == null)
+            return false;
+        if (index >= 0)//若索引大于等于0，则进行单格主动添加。反之进行全容量自动添加循环
         {
-            slots[i] = new InventorySlot();
+            AddSlotItem(slots, index, addItemId, addAmount);
         }
-    }*/
-
-    // 添加物品的函数(slots数组本体，itemDatabase物品数据库，itemId物品id，amount添加数量)
-    public static bool AddItem(string inventoryID, InventorySlot[] slots, ItemDatabase itemDatabase, string addItemId, int addAmount)
-    {
         // 最大堆叠数量 = 物品库.实例.获取物品数据(添加物品id).最大堆叠
         int maxStack = itemDatabase.GetItemData(addItemId).maxStack;
-        // 寻找可堆叠格子
+        // 第一遍循环，寻找可堆叠格子
         for (int i = 0; i < slots.Length; i++)
         {
             //若 物品id相同，尝试堆叠物品
@@ -44,15 +36,15 @@ public static class InventorySystem
                     int add = Mathf.Min(canAdd, addAmount);
 
                     slots[i].amount += add;//当前物品数量增加
-                    EventBus.RaiseInventoryChanged(inventoryID, i);//传入id实现单容器刷新，传入索引实现单格刷新
+                    //EventBus.RaiseInventoryChanged(inventoryID, i);//传入id实现单容器刷新，传入索引实现单格刷新
                     addAmount -= add;//需要添加的物品数量减少
-                    Debug.Log("apple");
+                        
                     if (addAmount <= 0)
                         return true;
                 }
             }
         }
-        // 寻找往空格子
+        // 第二遍循环，寻找往空格子
         for (int i = 0; i < slots.Length; i++)
         {
             // string.IsNullOrEmpty是系统为string类提供的静态方法，同时判断null和空字符串
@@ -64,7 +56,7 @@ public static class InventorySystem
                 slots[i].itemId = addItemId;
                 slots[i].amount = add;
                 addAmount -= add;
-                EventBus.RaiseInventoryChanged(inventoryID, i);//传入id实现单容器刷新，传入索引实现单格刷新
+                //EventBus.RaiseInventoryChanged(inventoryID, i);//传入id实现单容器刷新，传入索引实现单格刷新
 
                 if (addAmount <= 0)
                     return true;
@@ -73,39 +65,24 @@ public static class InventorySystem
         //EventBus.RaiseInventoryChanged();
         return false;// 没有空间无法添加则返回false
     }
-
-    // 减少物品的函数(slots数组本体，index数组索引(需要修改的数组位置)，removeAmount物品数量)
-    // 这个是玩家操作层的减少物品，通过与UI互动拿走物品
-    public static bool PlayerRemoveItem(string inventoryID, InventorySlot[] slots, int index, int removeAmount)
+    public static void AddSlotItem(InventorySlot[] slots, int index, string addItemId, int addAmount)
     {
-        //若 索引错误则返回
-        if (index < 0 || index >= slots.Length)
-            return false;
-        //若 格子是空的则返回
-        if (string.IsNullOrEmpty(slots[index].itemId))
-            return false;
-        //若 数量小于减少的物品则返回
-        if (slots[index].amount < removeAmount)
-            return false;
-
-        // 使当前物品数量减少
-        slots[index].amount -= removeAmount;
-        //若 当前物品数量小于等于0则设置为空格子
-        if (slots[index].amount <= 0)
-        {
-            slots[index].itemId = null;
-            slots[index].amount = 0;
-        }
-        EventBus.RaiseInventoryChanged(inventoryID, index);//传入id实现单容器刷新，传入索引实现单格刷新
-        return true;
+        slots[index].itemId = addItemId;
+        slots[index].amount = addAmount;
+        return;
     }
 
+    public static void ClearItem(InventorySlot[] slots, int index)
+    {
+        slots[index].itemId = null;
+        slots[index].amount = 0;
+        return;
+    }
     // 这个是系统操作层的减少物品，用于合成、任务、商场等直接规模性减少的情况
     public static bool RemoveItem(string inventoryID, InventorySlot[] slots, string itemId, int removeAmount)
     {
-        // 先检查总量够不够
+        // 首先遍历整个容器数组，检查需要消耗的物品总量够不够
         int total = 0;
-
         for (int i = 0; i < slots.Length; i++)
         {
             if (slots[i].itemId == itemId)
@@ -113,7 +90,7 @@ public static class InventorySystem
                 total += slots[i].amount;
             }
         }
-
+        //若不够则返回，反之再遍历一遍进行消耗
         if (total < removeAmount)
             return false;
 
@@ -141,4 +118,30 @@ public static class InventorySystem
         }
         return true;
     }
+    /*/ 减少物品的函数(slots数组本体，index数组索引(需要修改的数组位置)，removeAmount物品数量)
+    // 这个是玩家操作层的减少物品，通过与UI互动拿走物品//改用直接清除格子了
+    public static bool PlayerRemoveItem(string inventoryID, InventorySlot[] slots, int index, int removeAmount)
+    {
+        
+        //若 索引错误则返回
+        if (index < 0 || index >= slots.Length)
+            return false;
+        //若 格子是空的则返回
+        if (string.IsNullOrEmpty(slots[index].itemId))
+            return false;
+        //若 数量小于减少的物品则返回
+        if (slots[index].amount < removeAmount)
+            return false;
+
+        // 使当前物品数量减少
+        slots[index].amount -= removeAmount;
+        //若 当前物品数量小于等于0则设置为空格子
+        if (slots[index].amount <= 0)
+        {
+            slots[index].itemId = null;
+            slots[index].amount = 0;
+        }
+        EventBus.RaiseInventoryChanged(inventoryID, index);//传入id实现单容器刷新，传入索引实现单格刷新
+        return true;
+    }*/
 }

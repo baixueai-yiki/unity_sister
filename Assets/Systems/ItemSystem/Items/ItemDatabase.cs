@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-//可创建的资源模板（路径名字 = 游戏/Item Database ）
+//可创建的资源模板（路径名字 = 游戏/Item ItemDatabase ）//我不确定现在改名字会不会让他炸掉
 [CreateAssetMenu(menuName = "Game/Item Database")]
 //声明一个名为ItemDatabase的类：ScriptableObject资源型数据类
 public class ItemDatabase : ScriptableObject
