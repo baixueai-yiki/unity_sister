@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class OrangeActor : MonoBehaviour , IPickItemData
 {
-    public string itemId = "core_test_orange";
+    public string itemId = "test_orange";
     public int amount = 1;
 
 

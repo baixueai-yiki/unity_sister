@@ -78,12 +78,11 @@ public class InventoryUI : MonoBehaviour
         var slots = iItemSystem.GetInventorySlots();
         if (slots == null || index < 0 || index >= slots.Length)//格子不存在或索引有问题时返回
             return;
-        // Debug.Log($"inventory={inventoryID}");
-        // Debug.Log($"index={index}");
-        // Debug.Log($"slots={slots.Length}");
-        // Debug.Log($"slotUIs={slotUIs.Length}");
-        
-        //Debug.Log("格子为空，则将UI格子清空");
+        // Debug.Log(
+        // "容器ID:" + inventoryID +
+        // " 数据格子:" + slots.Length +
+        // " UI格子:" + slotUIs.Length
+        // );
         // var读取集合：获取玩家背包索引的格子数据，并赋值给item物品变量
         var item = slots[index];
         if (string.IsNullOrEmpty(item.itemId))// 若 格子为空，则将UI格子清空

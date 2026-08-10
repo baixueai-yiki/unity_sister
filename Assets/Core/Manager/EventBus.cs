@@ -34,7 +34,7 @@ public static class EventBus
     
     // 由InventorySystem调用，由各种容器本体监听。传入id定位刷新容器，传入索引定位刷新格子
     public static event Action<int> OnPlayerInventoryChanged;
-    public static event Action<int> OnTableInventoryChanged;
+    public static event Action<int> OnChestInventoryChanged;
     public static void RaiseInventoryChanged(string InventoryID, int index)
     {
         switch (InventoryID)
@@ -42,8 +42,8 @@ public static class EventBus
             case "PlayerInventory":
                 OnPlayerInventoryChanged?.Invoke(index);//广播事件：玩家容器变化（玩家背包）
                 break;
-            case "TableInventory":
-                OnTableInventoryChanged?.Invoke(index);//广播事件：桌子容器变化（桌子储存格）
+            case "ChestInventory":
+                OnChestInventoryChanged?.Invoke(index);//广播事件：箱子容器变化（箱子储存格）
                 break;
             default:
                 Debug.LogWarning("Unhandled inventory ID: " + InventoryID);

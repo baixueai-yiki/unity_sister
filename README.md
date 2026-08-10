@@ -54,32 +54,50 @@
 
 ## 脚本准备
 1.全局core
-EventBus.cs事件总线：整个项目一切事件都在这里注册，外部通过函数调用
-TimeSystem.cs时间系统：
-GameStateMachine.cs游戏状态机：管理游戏整体状态，如标题状态、游戏状态、对话状态
-
+    EventBus.cs事件总线：整个项目一切事件都在这里注册，外部通过函数调用
+    TimeSystem.cs时间系统：
+    GameStateMachine.cs游戏状态机：管理游戏整体状态，如标题状态、游戏状态、对话状态
 2.玩家Game/Player
-PlayerStateMachine.cs玩家状态机：管理玩家的行为状态，如待机、行走、交互
-PlayerController.cs玩家控制器：读取玩家状态机判定操作权限，以此控制玩家的操作输入
-
+    PlayerController.cs玩家控制器：读取玩家状态机判定操作权限，以此控制玩家的操作输入
+    PlayerInspect.cs玩家检视：
+    PlayerInteract.cs玩家互动：
+    PlayerPick.cs玩家拾取：
+    PlayerStateMachine.cs玩家状态机：管理玩家的行为状态，如待机、行走、交互
 3.通用Game/Components
-CharacterMovement.cs控制移动：执行移动、扣除体力、调用移动动画
-CharacterAttributes.cs控制属性：管理角色的属性、buff（用于调整属性扣除与恢复）
-CharacterAnimation.cs控制动画：管理角色播放的动画类型，如移动时播放行走动画
+    CharacterMovement.cs控制移动：执行移动、扣除体力、调用移动动画
+    CharacterAttributes.cs控制属性：管理角色的属性、buff（用于调整属性扣除与恢复）
+    CharacterAnimation.cs控制动画：管理角色播放的动画类型，如移动时播放行走动画
 
-PositionClamp.cs位置钳：用于限制能去到的最大位置
-
-CharacterCombat.cs控制战斗
-（这个暂时不做）
-CharacterInteraction.cs控制交互
-（这个不应该在场景对象里面吗）
-
-4.UI/MenuScripts主菜单UI
-（这些目前啥都没做）
+    PositionClamp.cs位置钳：用于限制能去到的最大位置
+    CharacterCombat.cs控制战斗（这个暂时不做）
+    CharacterInteraction.cs控制交互（这个不应该在场景对象里面吗）
+4.Systems/ItemSystem物品/容器系统
+    4.1./DragLayer拖动者
+        4.1.1.DragSystem拖动系统：
+    4.2./Inventorys容器
+        4.2.1.InventorySlot.cs容器格：只是声明了一个类，用作对象容器的数组元素
+        4.2.2.InventorySystem.cs容器系统：存放添加或删除格子物品的逻辑
+        4.2.3.PlayerInventory.cs玩家容器：玩家的随身背包，拾取的物品会自动发到这里
+        4.2.4.TableInventory.cs桌子容器：工作台的容器，用于存放合成物品
+    4.3./Items物品
+        4.3.1.ItemData.cs物品类：只是声明了一个类，用作物品数据库的数组元素和调控的数据
+        4.3.2.ItemDatabase.cs物品数据库：提供了创建一个.asset文件的方法并提供查询数据的函数
+    4.4./Recipes配方
+        4.4.1.RecipeData.cs配方数据：只是声明了一个类，用作配方数据库的数组元素
+        4.4.2.RecipeDatabase.cs配方数据库：提供了创建一个.asset文件的方法并提供查询数据的函数
 5.UI/GameScripts游戏UI
-PlayerStatusUI.cs玩家状态ui：用于显示玩家的各项属性和buff
-TimeUI.cs时间ui：用于展示玩家之外的信息
-DialogueUI.cs对话框ui：用于展示对话内容
+    5.1./HUDRoot头显
+        PlayerStatusUI.cs玩家状态ui：用于显示玩家的各项属性和buff
+        TimeUI.cs时间ui：用于展示玩家之外的信息
+    5.2./PanelRoot面板
+        DialogueUI.cs对话框ui：用于展示对话内容
+        InventorySlotUI.cs容器格UI：作为容器UI的基础单位使用
+        InventoryUI.cs容器UI：绑定对象上的容器脚本里的数组使用
+        RecipeEntryUI.cs配方条目UI：
+        RecipeUI.cs配方UI：
+    5.3./PopupRoot提示
+6.UI/MenuScripts主菜单UI
+（这些目前啥都没做）
 
 ## 剧情与文本准备
 
@@ -109,8 +127,8 @@ MainMenu.unity/     # 主菜单场景
 SampleScene.unity/  # 游戏场景
 ├── EventSystem         # 事件系统（unity自带）
 ├── Main Camera         # 正交摄像机
-│   ├── CameraFollow.cs                # 摄像机跟随
-│   └── PositionClamp.cs               # 位置钳（用于限制移动的最大位置）
+│   ├── CameraFollow.cs                     # 摄像机跟随
+│   └── PositionClamp.cs                    # 位置钳（用于限制移动的最大位置）
 ├── Global Light 2D     # (unity自带)
 ├── EventBus            # 事件总线
 │   └── EventBus.cs
@@ -120,32 +138,32 @@ SampleScene.unity/  # 游戏场景
 │   └── GameStateMachine.cs
 ├── Canvas/             # 画布
 │   ├── HUDRoot         # 常驻UI：血量/时间PanelRoot
-│   │   │   ├── PlayerStatusUI.cs          # 玩家属性UI
-│   │   │   └── TimeUI.cs                  # 时间ui
+│   │   │   ├── PlayerStatusUI.cs           # 玩家属性UI
+│   │   │   └── TimeUI.cs                   # 时间ui
 │   │   ├── Text_Time           # 时间文本
 │   │   └── Bar_Stamina         # 
 │   │       ├── Background      # 
 │   │       └── Fill Area       # 
 │   │           └── Fill        # 
 │   ├── PanelRoot       # 弹窗UI：背包/设置/对话
-│   │   │   ├── StoryManager.cs            # 故事控制器
-│   │   │   └── DialogueUI.cs              # 对话框UI
+│   │   │   ├── StoryManager.cs             # 故事控制器
+│   │   │   └── DialogueUI.cs               # 对话框UI
 │   │   ├── Panel_Dialogue      # 对话面版
 │   │   │   ├── Text_Dialogue
 │   │   │   └── Img_Dialogue
-│   │   ├── Panel_PlayerInventoryUI # 玩家背包UI面版
+│   │   ├── Panel_PlayerInventoryUI         # 玩家背包UI面版
 │   │   │   └── PlayerInventoryUI
-│   │   │       └── UISlot
+│   │   │       └── UISlot（预制体）
 │   │   ├── Panel_TableUI  # 桌子UI面版
-│   │   │   ├── TableInventoryUI    # 桌子容器UI
-│   │   │   │   ├── UISlot
-│   │   │   │   ├── UISlot
-│   │   │   │   ├── UISlot
-│   │   │   │   └── UISlot
-│   │   │   └── RecipeUI            # 合成UI
+│   │   │   ├── TableInventoryUI            # 桌子容器UI
+│   │   │   │   ├── UISlot（预制体）
+│   │   │   │   ├── UISlot（预制体）
+│   │   │   │   ├── UISlot（预制体）
+│   │   │   │   └── UISlot（预制体）
+│   │   │   └── RecipeUI        # 合成UI
 │   │   │       ├── Viewport
 │   │   │       │   └── Content
-│   │   │       │       └── RecipeEntryUI
+│   │   │       │       └── RecipeEntryUI（预制体）
 │   │   │       │           ├── Button_Craft
 │   │   │       │           ├── Img_ItemIcon
 │   │   │       │           ├── Txet_ItemId
@@ -161,9 +179,10 @@ SampleScene.unity/  # 游戏场景
 │   │   │       │           └── Img_ResultIcon4
 │   │   │       └── Scrollbar Vertical
 │   │   └── Img_Dialogue    # 对话框
-│   └── PopupRoot       # 提示UI：获得物品
-│           └── ToastUI.cs                 # 提示ui
-│
+│   └── PopupRoot    # 提示UI：获得物品
+│           └── ToastUI.cs             # 提示ui
+├── Grid
+│   └── Tilemap                        # 瓦片地图
 ├── Player           # 玩家对象
 │   │   ├── PlayerStateMachine.cs      # 玩家状态机
 │   │   ├── PlayerController.cs        # 玩家控制：WASD移动、速度、方向
@@ -173,19 +192,11 @@ SampleScene.unity/  # 游戏场景
 │   │   ├── CharacterAttributes.cs     # 对象属性（体力、体温、饥饿等数据）
 │   │   └── PositionClamp.cs           # 位置钳（用于限制移动的最大位置）
 │   └── Sprite
-│       └──(组件)Animator   # 动画控制器
-├── Grid             # 
-│   └── Tilemap             # 瓦片地图
+│       └──(组件)Animator              # 动画控制器
+├── Interact         # 互动对象
+└── Pick             # 拾取对象
 
 Test.unity/ # 测试地图
-├── Canvas/                 # 画布
-│   ├── SlotUI/             # 格子UI
-│   │   ├── Img_Icon                   # 物品图标
-│   │   ├── Img_Slot                   # 格子
-│   │   ├── Img_Highlight              # 高亮格子
-│   │   ├── Txet_Amount                # 显示数量
-│   │   └── Panel_Tooltip              # 提示面板
-│   │       └── Text_Description       # 物品介绍
 
 ## 目录结构
 Assets/
@@ -222,8 +233,8 @@ Assets/
 │
 ├── Game/                  # 核心游戏模块
 │   ├── Actors/            # 场景道具
-│   │   ├── TableActor.cs          # 对象动画：走路、躺下、交互动作
-│   │   ├── AppleActor.cs         # 对象属性（体力、体温、饥饿等数据）
+│   │   ├── TableActor.cs                  # 对象动画：走路、躺下、交互动作
+│   │   ├── AppleActor.cs                  # 对象属性（体力、体温、饥饿等数据）
 │   │   ├── CharacterMovement.cs           # 对象移动
 │   │   └── PositionClamp.cs               # 位置钳（用于限制移动的最大位置）
 │   ├── Camera/            # 摄像机
@@ -275,14 +286,14 @@ Assets/
 ├── Tool                   # 开发工具
 │   └── ExcelImporter      # Excel输入
 │       ├── Core
-│       │   ├── ExcelReader.cs              # 读取excel文件
-│       │   └── DatabaseImporterWindow.cs   # Unity编辑器里的按钮入口
+│       │   ├── ExcelReader.cs             # 读取excel文件
+│       │   └── DatabaseImporterWindow.cs  # Unity编辑器里的按钮入口
 │       ├── DTO
-│       │   ├── ItemDataDTO.cs              # 暂存excel的ItemData数据
-│       │   └── RecipeDataDTO.cs            # 暂存excel的RecipeData数据
+│       │   ├── ItemDataDTO.cs             # 暂存excel的ItemData数据
+│       │   └── RecipeDataDTO.cs           # 暂存excel的RecipeData数据
 │       └── Exporter
-│           ├── JsonExporter.cs             # 输出为json文件
-│           └── AssetExporter.cs            # 输出为asset文件
+│           ├── JsonExporter.cs            # 输出为json文件
+│           └── AssetExporter.cs           # 输出为asset文件
 ├── UI/
 │   ├── MenuScripts/       # 主菜单脚本
 │   │   ├── MainMenuUI.cs                  # 主菜单脚本
@@ -291,14 +302,14 @@ Assets/
 │   │   ├── CreditsUI.cs                   # 致谢名单脚本
 │   │   └── SettingUI.cs                   # 设置界面脚本
 │   ├── GameScripts/       # 游戏脚本
-│   │   │── HUDRoot/       # 头显
+│   │   ├── HUDRoot/       # 头显
 │   │   │   ├── PlayerStatusUI.cs          # 玩家属性UI
 │   │   │   └── TimeUI.cs                  # 时间ui
-│   │   │── PanelRoot/     # 弹窗：背包/设置/对话
-│   │   │   ├── InventoryUI/
-│   │   │   │   ├── InventoryUI.cs         # 容器UI
-│   │   │   │   └── InventorySlotUI.cs     # 容器格ui（其他ui是复用这个的）
-│   │   │   └── DialogueUI.cs              # 对话框UI
+│   │   ├── PanelRoot/     # 弹窗：背包/设置/对话
+│   │   │   ├── DialogueUI.cs              # 对话框UI
+│   │   │   └── InventoryUI/
+│   │   │       ├── InventorySlotUI.cs     # 容器格ui（其他ui是复用这个的）
+│   │   │       └── InventoryUI.cs         # 容器UI
 │   │   └── PopupRoot/     # 提示：
 │   │       └── ToastUI.cs                 # 对话框UI
 │   ├── Fonts/             # 字体

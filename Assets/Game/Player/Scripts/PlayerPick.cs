@@ -68,7 +68,7 @@ public class PlayerPick : MonoBehaviour
                 pickItem.itemId, 
                 pickItem.amount
             );
-            //Debug.Log("success = " + success);
+            Debug.Log("success = " + success);
             if (success)//若成功添加则销毁碰撞目标
             {
                 Destroy(pickTarget);

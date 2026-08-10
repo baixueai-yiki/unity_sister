@@ -8,6 +8,27 @@ public static class InventorySystem
     //public InventorySlot[] slots;// 所有格子数据
 
 
+    // 替换物品（合成系统）的函数(inventoryID容器ID，slots数组ID，index索引，resultItemId替换物品id)
+    public static bool ReplaceItem(string inventoryID,InventorySlot[] slots,int index,string resultItemId)
+    {
+        if (slots == null)
+            return false;
+        //若 索引小于零或索引大于等于数组长度（有问题）则返回
+        if (index < 0 || index >= slots.Length)
+            return false;
+        //若 格子是空的则返回
+        if (string.IsNullOrEmpty(slots[index].itemId))
+            return false;
+        //若 替换物品id是null则返回
+        if (string.IsNullOrEmpty(resultItemId))
+            return false;
+        // 将传入的数组索引位置的物品id替换为结果物品id
+        slots[index].itemId = resultItemId;
+        // 传入id实现单容器刷新，传入索引实现单格刷新
+        EventBus.RaiseInventoryChanged(inventoryID, index);
+        return true;
+    }
+
     // 添加物品的函数(inventoryID容器ID，slots数组ID，itemDatabase物品数据库，index索引，itemId物品id，amount添加数量)
     public static bool AddItem(string inventoryID, InventorySlot[] slots, ItemDatabase itemDatabase, int index, string addItemId, int addAmount)
     {
@@ -16,9 +37,11 @@ public static class InventorySystem
         if (index >= 0)//若索引大于等于0，则进行单格主动添加。反之进行全容量自动添加循环
         {
             AddSlotItem(slots, index, addItemId, addAmount);
+            return true;
         }
         // 最大堆叠数量 = 物品库.实例.获取物品数据(添加物品id).最大堆叠
         int maxStack = itemDatabase.GetItemData(addItemId).maxStack;
+        
         // 第一遍循环，寻找可堆叠格子
         for (int i = 0; i < slots.Length; i++)
         {

@@ -2,30 +2,28 @@ using UnityEngine;
 
 
 
-//声明一个名为PlayerInventory的类，继承自MonoBehaviour类，实现IInventorySource接口
+//声明一个名为PlayerInventory的类，继承自MonoBehaviour类，实现IItemSystem接口
 public class PlayerInventory : MonoBehaviour, IItemSystem
 {
 
-    public ItemDatabase itemDatabase;   //引用：物品数据库
-    public InventoryUI inventoryUI;//引用：容器UI
-    public string InventoryID = "PlayerInventory";//玩家背包的唯一ID
-    public GameObject Panel_PlayerInventoryUI;          //引用：玩家容器UI面板
-// 声明InventorySlot类的数组slots 赋值为 创建一个长度为1的 InventorySlot容器格类 的数组
-    public InventorySlot[] slots = new InventorySlot[1];//声明一个容器数组，赋值为一个新的长度为1的容器格类的数组
-    //通过接口把InventoryID容器id传给InventoryUI
-    public string GetInventoryID()
+    public ItemDatabase itemDatabase;               //引用：物品数据库
+    public InventoryUI inventoryUI;                 //引用：容器UI
+    public string InventoryID = "PlayerInventory";  //玩家背包的唯一ID
+    public GameObject Panel_PlayerUI;               //引用：玩家（容器）UI面板
+    public InventorySlot[] slots = new InventorySlot[1];//声明一个容器格类的数组，赋值为一个新的长度为1的容器格类的数组
+    
+    public string GetInventoryID()//通过接口把InventoryID容器id传给InventoryUI
     {
         return InventoryID;
     }
-    //通过接口把slots数组传给InventoryUI
-    public InventorySlot[] GetInventorySlots()
+    public InventorySlot[] GetInventorySlots()//通过接口把slots数组传给InventoryUI
     {
         return slots;
     }
 
     void Start()
     {
-        Panel_PlayerInventoryUI.SetActive(false);    // 游戏开始时，默认隐藏Panel_PlayerInventoryUI面板
+        Panel_PlayerUI.SetActive(false);    // 游戏开始时，默认隐藏Panel_PlayerInventoryUI面板
     }
     void Awake()//给每个格子创建真实对象
     {
