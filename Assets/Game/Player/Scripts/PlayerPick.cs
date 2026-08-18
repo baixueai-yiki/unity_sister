@@ -10,15 +10,15 @@ public interface IPickItemData//声明一个接口IPickItemData
 public class PlayerPick : MonoBehaviour
 {
     
-    public PlayerInventory playerInventory;        //引用：PlayerInventory玩家背包脚本
-    //public ItemData itemData;                   //引用：物品数据类（静态的）
-    public ItemDatabase itemDatabase;           //引用：物品数据库（静态的）
+    public PlayerInventory playerInventory; //引用：PlayerInventory玩家背包脚本
+    //public ItemData itemData;             //引用：物品数据类（静态的）
+    public ItemDatabase itemDatabase;       //引用：物品数据库（静态的）
 
 
-    private GameObject pickTarget;            //声明GameObject变量pickTarget拾取对象
-    private string pickName;            //声明GameObject变量pickName拾取名字
-    private string pickItemId;          //声明一个字符串，拾取物品id
-    private int pickAmount;             //声明一个int，拾取数量
+    private GameObject pickTarget;          //声明GameObject变量pickTarget拾取对象
+    private string pickName;                //声明GameObject变量pickName拾取名字
+    private string pickItemId;              //声明一个字符串，拾取物品id
+    private int pickAmount;                 //声明一个int，拾取数量
 
 
     private void Awake()//场景加载时调用的函数
@@ -68,7 +68,7 @@ public class PlayerPick : MonoBehaviour
                 pickItem.itemId, 
                 pickItem.amount
             );
-            Debug.Log("success = " + success);
+            //Debug.Log("success = " + success);
             if (success)//若成功添加则销毁碰撞目标
             {
                 Destroy(pickTarget);

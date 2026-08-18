@@ -9,17 +9,15 @@ public class ChestActor : MonoBehaviour, IInteractActor
     {
         return InteractID;
     }
-
-
-
-
-    void InteractChest()// 玩家与箱子互动时调用的函数
+    public void Interact()// 玩家与箱子互动时调用的函数
     {
+        //Debug.Log("apple");
         chestInventory.Interact();
     }
-    void EndInteractChest()// 结束互动时调用的函数
+    public void EndInteract()// 结束互动时调用的函数
     {
-        
         chestInventory.EndInteract();
     }
+
+
 }

@@ -8,7 +8,7 @@ public static class InventorySystem
     //public InventorySlot[] slots;// 所有格子数据
 
 
-    // 替换物品（合成系统）的函数(inventoryID容器ID，slots数组ID，index索引，resultItemId替换物品id)
+    // 替换物品（合成系统）的函数(inventoryID容器ID，slots数组，index索引，resultItemId替换物品id)
     public static bool ReplaceItem(string inventoryID,InventorySlot[] slots,int index,string resultItemId)
     {
         if (slots == null)

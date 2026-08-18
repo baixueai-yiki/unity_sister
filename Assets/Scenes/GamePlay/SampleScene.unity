@@ -376,7 +376,7 @@ Transform:
   m_GameObject: {fileID: 162766182}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.51, y: 0.39, z: 0}
+  m_LocalPosition: {x: 1.51, y: -3.09, z: 0}
   m_LocalScale: {x: 7, y: 5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -865,7 +865,7 @@ Transform:
   m_GameObject: {fileID: 263017871}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2, y: -3.4999998, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1021,7 +1021,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -200, y: -100}
+  m_AnchoredPosition: {x: 465, y: -90}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &346296315
@@ -1245,8 +1245,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0df4d430491ad241aca896832240d37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemDatabase: {fileID: 11400000, guid: 25ff3aca40602c3428287a4bfd3ff12e, type: 2}
   playerController: {fileID: 0}
+  playerInventory: {fileID: 0}
   interactState: 
+  interactItem:
+    id: 
+    name: 
+    description: 
+    icon: {fileID: 0}
+    maxStack: 1
+    interactActor: 
+    interactResult: 
+    interactEvent: 
+    calorie: 0
+    protein: 0
+    vitamin: 0
+    disgust: 0
+    healthImpact: 0
 --- !u!61 &363185314
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1321,7 +1337,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemDatabase: {fileID: 11400000, guid: 25ff3aca40602c3428287a4bfd3ff12e, type: 2}
   inventoryUI: {fileID: 383948248}
-  InventoryID: PlayerInventory
+  inventoryID: PlayerInventory
   Panel_PlayerUI: {fileID: 346296313}
   slots:
   - itemId: 
@@ -1410,7 +1426,7 @@ Transform:
   m_GameObject: {fileID: 370790850}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -11.44, y: 2.15, z: 0}
+  m_LocalPosition: {x: -11.44, y: -1.09, z: 0}
   m_LocalScale: {x: 7, y: 5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1476,7 +1492,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemDatabase: {fileID: 11400000, guid: 25ff3aca40602c3428287a4bfd3ff12e, type: 2}
   inventoryUI: {fileID: 168489947}
-  InventoryID: ChestInventory
+  inventoryID: ChestInventory
   Panel_PlayerUI: {fileID: 346296313}
   Panel_ChestUI: {fileID: 851817035}
   slots:
@@ -1529,9 +1545,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 370790850}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0055b0de479163f4dbb9202da770375b, type: 3}
+  m_Script: {fileID: 11500000, guid: 39d0ccd1c1ebc454ab4ffb4154943401, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chestInventory: {fileID: 370790854}
   InteractID: ChestInteract
 --- !u!1 &383948246
 GameObject:
@@ -1543,6 +1560,7 @@ GameObject:
   m_Component:
   - component: {fileID: 383948247}
   - component: {fileID: 383948248}
+  - component: {fileID: 383948249}
   m_Layer: 5
   m_Name: PlayerInventoryUI
   m_TagString: Untagged
@@ -1587,6 +1605,20 @@ MonoBehaviour:
   dragSystem: {fileID: 1837962693}
   monoBehaviour: {fileID: 363185316}
   slotUIs: []
+--- !u!114 &383948249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 383948246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb053264d86111b48a28cc403587feca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 363185304}
+  offset: {x: 0, y: 2.5, z: 0}
 --- !u!1 &490342031
 GameObject:
   m_ObjectHideFlags: 0
@@ -3975,8 +4007,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 636.6667, y: 243.66666}
+  m_AnchoredPosition: {x: 23.3, y: 0}
+  m_SizeDelta: {x: 629.6534, y: 243.66666}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1430764338
 MonoBehaviour:

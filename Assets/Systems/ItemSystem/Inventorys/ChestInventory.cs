@@ -8,7 +8,7 @@ public class ChestInventory : MonoBehaviour, IItemSystem
 
     public ItemDatabase itemDatabase;   //引用：物品数据库
     public InventoryUI inventoryUI;//引用：容器UI
-    public string InventoryID = "ChestInventory";//箱子容器的唯一ID
+    public string inventoryID = "ChestInventory";//箱子容器的唯一ID
     public GameObject Panel_PlayerUI;         //引用：玩家容器UI面板
     public GameObject Panel_ChestUI;          //引用：箱子容器UI面板
 // 声明InventorySlot类的数组slots 赋值为 创建一个长度为1的 InventorySlot容器格类 的数组
@@ -17,7 +17,7 @@ public class ChestInventory : MonoBehaviour, IItemSystem
     //通过接口把InventoryID容器id传给InventoryUI
     public string GetInventoryID()
     {
-        return InventoryID;
+        return inventoryID;
     }
     //通过接口把slots数组传给InventoryUI
     public InventorySlot[] GetInventorySlots()
@@ -69,17 +69,17 @@ public class ChestInventory : MonoBehaviour, IItemSystem
     public void Interact()// 玩家与箱子互动时调用的函数
     {
         
-        Panel_PlayerUI.SetActive(true);    // 互动展开Panel_PlayerInventoryUI面板
-        Panel_ChestUI.SetActive(true);     // 互动展开Panel_ChestInventoryUI面板
+        Panel_PlayerUI.SetActive(true);    // 互动展开Panel_PlayerUI面板
+        Panel_ChestUI.SetActive(true);     // 互动展开Panel_ChestUI面板
         //传入id实现单容器刷新，传入索引实现单格刷新，索引写成-1时刷新整个容器
-        EventBus.RaiseInventoryChanged("PlayerInventory", -1);
+        EventBus.RaiseInventoryChanged("PlayerInventory", 0);
         EventBus.RaiseInventoryChanged("ChestInventory", -1);
     }
     public void EndInteract()// 结束互动时调用的函数
     {
         
-        Panel_PlayerUI.SetActive(false);    // 互动展开Panel_PlayerInventoryUI面板
-        Panel_ChestUI.SetActive(false);     // 互动展开Panel_ChestInventoryUI面板
+        Panel_PlayerUI.SetActive(false);    // 再次互动关闭Panel_PlayerUI面板
+        Panel_ChestUI.SetActive(false);     // 再次互动关闭Panel_ChestUI面板
     }
 
     // 添加物品的函数(slots数组本体，itemDatabase物品数据库，itemId物品id，amount物品数量)
